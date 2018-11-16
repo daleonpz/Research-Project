@@ -1,4 +1,4 @@
-Összefoglaló
+Summary
 ============
 
-A diplomaterv összefoglaló fejezete.
+A summary of the diploma

@@ -1,2 +1,2 @@
-Irodalomjegyzék {.unnumbered}
+Bibliography {.unnumbered}
 ===============

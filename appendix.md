@@ -1,9 +1,9 @@
 \appendix
 
-Függelék
+Appendix
 ========
 
-Válasz az ,,Élet, a világmindenség, meg minden'' kérdésére
+Answer to the "Life, the Universe, and All" questions
 ----------------------------------------------------------
 
 A Pitagorasz-tételből levezetve

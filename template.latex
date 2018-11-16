@@ -194,7 +194,7 @@ $endfor$
 %--------------------------------------------------------------------------------------
 \begin{titlepage}
 \begin{center}
-\Oldincludegraphics[width=60mm,keepaspectratio]{img/BME1782logo.pdf}\\
+%\Oldincludegraphics[width=60mm,keepaspectratio]{img/BME1782logo.pdf}\\
 
 \vspace{0.3cm}
 \textbf{$university$}\\
