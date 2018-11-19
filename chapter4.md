@@ -1,20 +1,15 @@
 A Markdown-sablon használata
 ============================
 
-Ebben a fejezetben röviden, implicit módon bemutatjuk a sablon használatának módját, ami azt jelenti, hogy sablon használata ennek a dokumentumnak a forráskódját tanulmányozva válik teljesen világossá. Amennyiben a szoftver-keretrendszer telepítve van, a sablon alkalmazása és a dolgozat szerkesztése Markdownban a sablon segítségével tapasztalataink szerint jóval hatékonyabb, mint egy WYSWYG (*What You See is What You Get*) típusú szövegszerkesztő esetén (pl. Microsoft Word, OpenOffice).
+Empty section 
 
-A \LaTeX\ tördelőrendszer használatához képest a Markdown nyelv több megszorítást is tartalmaz, így az elkészített dokumentum általában kevésbé testreszabható. Cserébe viszont a Markdownban készült dokumentumok exportálhatók HTML vagy e-könyv (EPUB) formátumba is.
 
 Ábrák és táblázatok
 -------------------
 
-A képeket a veszteségmentes PNG, valamint a veszteséges JPEG formátumban érdemes elmenteni. 
+Citation of a chapter [Implementation](#implementation)
 
-Az egyes képek mérete általában nem, de sok kép esetén a dokumentum összmérete így már szignifikáns is lehet. A dokumentumban felhasznált képfájlokat a dokumentum forrása mellett érdemes tartani, archiválni, mivel ezek hiányában a dokumentum nem fordul újra. Ha lehet, a vektorgrafikus képeket vektorgrafikus formátumban is érdemes elmenteni az újrafelhasználhatóság (az átszerkeszthetőség) érdekében.
-
-A képek beillesztésére a [Markdown eszközök](#markdown-eszkozok) fejezetben mutattunk be [példát](#markdown-logo). Az előző mondatban egyúttal az automatikusan feloldódó ábrahivatkozásra is láthatunk példát.
-
-A táblázatok használatára az alábbi táblázat mutat példát.
+A table
 
 ------ ---------- -------------
 Órajel Frekvencia Cél pin      
@@ -32,7 +27,7 @@ CLKE   72 MHz     FPGA CLK2
 XBUF   20 MHz     FPGA CLK3    
 ------ ---------- -------------
 
-Table: Az órajel-generátor chip órajel-kimenetei.
+Table: table title.
 
 Felsorolások és listák
 ----------------------

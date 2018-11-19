@@ -1,13 +1,13 @@
 # constants for defining the author, title, etc.
 FILENAME = thesis
-TITLE = Diplomaterv sablon Markdown leírónyelven
-AUTHOR = Szárnyas Gábor
-ADVISOR = Konzulens Elemér
-UNIVERSITY = Budapesti Műszaki és Gazdaságtudományi Egyetem
-DEPARTMENT = Méréstechnika és Információs Rendszerek Tanszék
-RESEARCH_GROUP = Hibatűrő Rendszerek Kutatócsoport
-THESIS_TYPE = Diplomaterv
-DOCUMENT_LANG = magyar
+TITLE = Developing a Rover-Following Application for APPSTACLE
+AUTHOR = Daniel Paredes 
+ADVISOR = Robert Höttger
+UNIVERSITY = Fachhochschule Dortmund 
+DEPARTMENT = No idea of the Department 
+RESEARCH_GROUP = Das Institut für die Digitalisierung von Arbeits- und Lebens­welten (IDiAL)  
+THESIS_TYPE = Master Thesis
+DOCUMENT_LANG = english
 BEFORE_FILE = guideline.md
 SOURCE_FILES = abstract.md chapter1.md chapter2.md chapter3.md chapter4.md summary.md acknowledgements.md bibliography.md
 APPENDIX_FILE = appendix.md
