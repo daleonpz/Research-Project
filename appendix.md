@@ -3,6 +3,14 @@
 Appendix
 ========
 
+Calibration of the picam in raspbian
+------------------------------------
+The `OpenCV`  version we are using  is 3.4.1.
+
+bla bla bla... more details here
+
+
+
 Answer to the "Life, the Universe, and All" questions
 ----------------------------------------------------------
 

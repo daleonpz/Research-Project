@@ -1,3 +1,8 @@
+---
+header-includes:
+  - \usepackage{algorithm2e}
+---
+
 Implementation {#implementation}
 =================
 
@@ -24,7 +29,7 @@ Camera calibration and the pinhole model
 
 If you hold that box in front of you in a dimly lit room, with the pinhole facing some light source  you see an inverted image appearing on the translucent plat [@Forsyth2002]. 
 In figure \ref{img:pinholemodel}, a 3D object (pyramid) is projected first on a scene plane, and then on the image plane. 
-Each point in the scene plane will have it's correspondence in the image plane. 
+Each point in the scene plane or _world frame_  will have it's correspondence in the image plane or _camera frame_. 
 The distance from the pinhole to the image plane is called focal lenght.  
 
 
@@ -56,23 +61,88 @@ The coordinates of the principal point is described by  $(x_0, y_0)$, $\alpha_{x
 \end{equation}
 
 
-The camera extrinsic parameters are given by the rotation matrix $\mathbf{R}$ and translation vector $\mathbf{t}$. which are used to project the image on the scene plane.
+The camera extrinsic parameters are given by the rotation matrix $\mathbf{R}$ and translation vector $\mathbf{t}$. which are used to project an image on the world frame to camera frame.
 There is also a scale transformation, but it's already given by $\alpha_{x}$ and $\alpha_{y}$.
 
-Current cameras are equipped with lenses that produce some distortions on the images, however, the pinhole model is still a good aproximation for our case since we are using a Pi Camera which has minimal distortions. 
+Current cameras are equipped with lenses that produce some distortions on the images, however, the pinhole model is still a good aproximation for our case since we are using a **PiCamera** which has minimal distortions. 
 
-The camera calibration has been done with using OpenCV. 
-This library implementation of the function `calibrateCamera` is based on [@Zhang2000] and [@Bouguet2010]  [@Schreier00]
+The camera calibration has been done with using `OpenCV`. 
+This library implementation is based on the technique described by [@Zhang2000] and the matlab implementation done by [@Bouguet2010]. 
+The calibration technique in [@Zhang2000] requires the camera to observed a planar pattern, usually a chessboard pattern, at different orientations, the more the better the estimation of the intrinsic parameters. 
+The calibration algorithm minimize the reprojection error which is the distance between observed feature points on the planer pattern and the projected using the estimates parameters. 
+ 
+For calibration we used a _ChArUco_ board instead of the clasical chessboard because it generates a better estimation of the pamateres [@opencv_library]. 
+
+![Plannar Patterns [@opencv_library] \label{img:pattern}](img/pattern.png)
+
+
+The procedure to calibrate the PiCamera is straightforward with `OpenCV` and the sample codes found under `opencv_contrib-3.4.1/modules/aruco/samples`. 
+**A detailed explantion can be found in the Appendix (not sure but is a remainder)**. 
+
+1. Create a charuco board, print it and paste it on a solid and planar surface.
+2. Compile the example code `calibrate_camera_charuco.cpp` and run it
+3. Place your pattern in different orientations and take pictures 
+4. When you are done, just close the program 
+
+
+**ADD PICTURE OF THE PATTERN ON MY OFFICE**
+
+In our case, the camera intrinsic matrix $\mathbf{A}$ is as following:
+
+
+\begin{equation}
+\mathbf{A} = 
+\begin{bmatrix}
+\alpha_{x} & \gamma & x_{0} \\
+0 & \alpha_{y} & y_{0} \\
+0 & 0 & 1 
+\end{bmatrix}=
+ \begin{bmatrix}
+6.125e+02 & 0. &  3.216e+02 \\
+0 & 6.122e+02 & 2.365e+02 \\
+0 & 0 & 1 
+\end{bmatrix} 
+\label{eq:resultintrinsicparameters}
+\end{equation}
+
+
+<!--
+A more detailed description should be added in the appendix
+-->
+
+Extrinsic Parameters
+--------------------------
+As it was mention before, the camera extrinsic parameters are given by the rotation matrix $\mathbf{R}$ and translation vector $\mathbf{t}$. 
+A rotation matrix can be formed as the product of three rotations around three cardinal axes, e.g., $x$, $y$, and $z$, or $x$, $y$, and $x$. This is generally a bad idea, as the result depends on the order in which the transforms applies [@Szeliski2010].
+
+However, a rotation can be also represented by a rotation axis $\mathbf{k} = \lbrack k_{x},k_{y},k_{z} \rbrack ^{T}$ and an angle $\theta$, or equivalenly by a vector $\mathbf{\omega} = \theta\mathbf{k}$. 
+In order to do the transformation from axis-angle representation to rotation matrix,  the cross-product matrix $\mathbf{K}$ and Rodrigues' rotation formula  can be used. 
 
 
 
+\begin{equation}
+\mathbf {K} =
+\begin{bmatrix}
+0       & -k_{z}    &  k_{y} \\
+k_{z}   & 0         & -k_{x} \\ 
+-k_{y}  &k_{x}      & 0
+\end{bmatrix}
+\label{eq:crossproductmatrix}
+\end{equation}
 
 
+\begin{equation}
+\mathbf {R} =\mathbf {I} +(\sin \theta )\mathbf {K} +(1-\cos \theta )\mathbf{K} ^{2}
+\label{eq:rodrigues}
+\end{equation}
+
+ 
+
+<!--
+Should I add the mathematical formulation for rodrigues formula? or just put it on the appendix
+-->
 
 
-- Camera calibration and parameters
 - Marker detection
-- Affine transformations (rotation, scaling and translation)
-- Rodrigues equation 
 
 
