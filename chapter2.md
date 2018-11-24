@@ -3,8 +3,8 @@ header-includes:
   - \usepackage{algorithm2e}
 ---
 
-Implementation {#implementation}
-=================
+Design and Implementation {#implementation}
+===========================================
 
 Use case description
 ------------------------------------
@@ -130,19 +130,77 @@ k_{z}   & 0         & -k_{x} \\
 \label{eq:crossproductmatrix}
 \end{equation}
 
-
 \begin{equation}
 \mathbf {R} =\mathbf {I} +(\sin \theta )\mathbf {K} +(1-\cos \theta )\mathbf{K} ^{2}
 \label{eq:rodrigues}
 \end{equation}
-
- 
 
 <!--
 Should I add the mathematical formulation for rodrigues formula? or just put it on the appendix
 -->
 
 
-- Marker detection
+Rotation matrix to Euler angles
+------------------------------------
+
+In order to get the angles related a rotation whose yaw, pitch and roll angles are $\phi$, $\rho$ and $\psi$. These angles are rotations in $z$, $y$ and $x$ axis respectively.
+We will rotate first about the $x$-axis, then the $y$-axis, and finally the $z$-axis.  Such a sequence of rotations can be represented as the matrix product
+
+\begin{equation}
+\mathbf{R}=R_{z}(\phi )\,R_{y}(\rho )\,R_{x}(\psi ) 
+\end{equation}
 
 
+\begin{equation}
+R_{x}(\psi) = 
+\begin{bmatrix}
+ 1 & 0 & 0 \\ 0 & \cos \psi & -\sin \psi \\ 0 & \sin \psi & \cos \psi  
+\end{bmatrix}
+\end{equation}
+
+
+
+\begin{equation}
+R_{y}(\rho )  =
+\begin{bmatrix}
+\cos \rho & 0& \sin \rho \\ 0& 1& 0\\ -\sin \rho & 0& \cos \rho 
+\end{bmatrix}
+\end{equation}
+
+
+\begin{equation}
+R_{z}(\phi )  =
+\begin{bmatrix}
+\cos \phi & -\sin \phi & 0\\ \sin \phi & \cos \phi & 0\\ 0& 0& 1
+\end{bmatrix}
+\end{equation}
+
+
+Given the given sequence of rotations and the algorithm described by [@Slabaugh1999], the angles can be found using  algorithm 1.
+
+\begin{figure}[ht]
+ \centering
+\begin{minipage}{.4\linewidth}
+\begin{algorithm}[H]
+\DontPrintSemicolon
+\SetAlgoLined
+\BlankLine
+\eIf{ $R_{31} \neq \pm 1$}{
+    $ \phi = \arctan2 (R_{21}, R_{11}) $\;
+    $ \rho = -\arcsin (R_{31}) $\;
+    $ \psi = \arctan2 (R_{32}, R_{33}) $\;
+}{
+    $ \phi = 0$ \;
+    $ \rho = -R_{31}\pi/2$ \;
+    $ \psi = \arctan2 (-R_{23}, R_{22} )$ \;
+}
+\caption{Slabaugh's algorithm}
+\end{algorithm} 
+\end{minipage}
+\end{figure}
+
+
+Marker Detection and Use Case
+-------------------------------
+
+in this part i ll describe how marker detection works, and implementation details.
