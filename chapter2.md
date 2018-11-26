@@ -8,15 +8,21 @@ Design and Implementation {#implementation}
 
 Use case description
 ------------------------------------
+In this research project we develop a  use case of rover-apps. 
+For the use case we are using two _Rovers_, a **Rover Leader** and a **Rover Follower**. 
+Hereinafter, we will only use **Leader** or **Follower**. 
+The leader has a set of marker and the follower should detect them, estimate the angle $\beta$ and distance $d$ with respect to the leader. 
+As it can be observed in figure \ref{img:roverusecase}, the leader has a visual marker and the follower uses the a _PiCamera_ to process the video and detect the marker in real time.
 
-Leader (agl)  and follower (raspbian). The leader has a set of marker and the follower detects them, estimate the rotation and distance of the leader.
+![Rover Use Case \label{img:roverusecase}](img/roverusecase.jpg)
 
-- Requirements 
-- Pin hole model
-- Camera calibration and parameters
-- Marker detection
-- Affine transformations (rotation, scaling and translation)
-- Rodrigues equation 
+
+
+As it was mentioned in the introduction, the rover vehicle is based on a raspberry pi 3 that can run _Raspbian Jessie_ or _AGL_ as Operating system.
+For this use case the follower runs a  _Raspbian Jessie_ image.
+
+
+
 
 Requirements
 -------------------
