@@ -8,26 +8,30 @@ Design and Implementation {#implementation}
 
 Use case description
 ------------------------------------
-In this research project we develop a  use case of rover-apps. 
+In this research project we develop a  use case for rover-apps. 
 For the use case we are using two _Rovers_, a **Rover Leader** and a **Rover Follower**. 
-Hereinafter, we will only use **Leader** or **Follower**. 
-The leader has a set of marker and the follower should detect them, estimate the angle $\beta$ and distance $d$ with respect to the leader. 
-As it can be observed in figure \ref{img:roverusecase}, the leader has a visual marker and the follower uses the a _PiCamera_ to process the video and detect the marker in real time.
+Hereinafter, we will only use **Leader** or **Follower** to refer to them. 
+The leader has a visual marker, the follower should detect it, estimate the angle $\beta$ and distance $d$ with respect to the leader as is shown in figure \ref{img:roverusecase}, and follow the leader. 
 
 ![Rover Use Case \label{img:roverusecase}](img/roverusecase.jpg)
 
 
-
-As it was mentioned in the introduction, the rover vehicle is based on a raspberry pi 3 that can run _Raspbian Jessie_ or _AGL_ as Operating system.
-For this use case the follower runs a  _Raspbian Jessie_ image.
-
-
+This chapter will focus on the development of the behavior of the follower because is the only rover that must be completely autonomous. 
+The  following sections will describe requirements, main hardware parts involved and software tools required to implement follower's behavior, camera calibration and pose estimation theory, and software implementation details. 
 
 
 Requirements
 -------------------
-
 No idea 
+
+Hardware and Software 
+----------------------
+As it was mentioned in the introduction, the rover vehicle is based on a raspberry pi 3 that can run _Raspbian Jessie_ or _AGL_ as Operating system.
+For this use case the follower runs a  _Raspbian Jessie_ image.
+The available hardware
+
+
+
 
 
 Camera calibration and the pinhole model
