@@ -16,21 +16,37 @@ The leader has a visual marker, the follower should detect it, estimate the angl
 ![Rover Use Case \label{img:roverusecase}](img/roverusecase.jpg)
 
 
-This chapter will focus on the development of the behavior of the follower because is the only rover that must be completely autonomous. 
+This chapter will be focused on the development of the behavior of the follower because is the only rover that must be completely autonomous. 
 The  following sections will describe requirements, main hardware parts involved and software tools required to implement follower's behavior, camera calibration and pose estimation theory, and software implementation details. 
 
 
 Requirements
 -------------------
-No idea 
+**Still have no idea how to write them**
+- The system is the follower, but it doesn't actually matter right now. 
+
+
+- Functional requirements? 
+    - The follower should detect a visual marker.
+    - The follower should estimate the distance and angle to the marker.
+    - The follower should steer based on the estimated values.
+    - The follower should be completely autonomous. 
+
+- Software requirements? 
+    - The follower should run Raspbian  as operating system.
+    - The follower code should use OpenCV library.
+    - The follower code should be based on rover-app libraries. 
+    - The follower code should be mantainable.
+    - The follower code should be reusable.
+    - The follower code should be easy to read and understand.
+
+
 
 Hardware and Software 
 ----------------------
 As it was mentioned in the introduction, the rover vehicle is based on a raspberry pi 3 that can run _Raspbian Jessie_ or _AGL_ as Operating system.
 For this use case the follower runs a  _Raspbian Jessie_ image.
 The available hardware
-
-
 
 
 
@@ -210,7 +226,7 @@ Given the given sequence of rotations and the algorithm described by [@Slabaugh1
 \end{figure}
 
 
-Marker Detection and Use Case
+Use case implementation details
 -------------------------------
 
 in this part i ll describe how marker detection works, and implementation details.
