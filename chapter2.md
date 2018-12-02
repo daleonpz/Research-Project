@@ -235,13 +235,23 @@ In figure \ref{img:roverusecase} is shown a diagram of our use case.
 The main sensor is a PiCamera, the processing part performs the marker detection the calculation of the euler angles and distance based on the equations described in the last section, and finally  the movement is generated using the driving rover services.
 
 
-**AUEAOU**  
+**Image Processing with OpenCV**  
 aueouaeotnuaehountsheotnuh aeuaoeuaetnos eaouhaoenthu. 
 atoenuhanoethunthsaotnhuaoeunhaoeu. 
 aeouhaoensthu
 
-**AOU**  
+**Relevant information**   
+It's only important to check only rotation in Y-Axis because the rover-vehicle is just a car. 
+
+
+**GY-521: Gyroscope Reading**  
+The CY-521 sensor is an accelerometer and gyroscope, with that information we could estimate the angular position of follower. 
+However, since the follower has none magnetometer the information given by the accelerometer is useless, since we have no information about the _magnetic north_. 
+
+
+
 uaeohuaoetnshutns etnahutnaeho uoeantsuhaoetnhun.
 etauhnsaetoh
+
 
 
