@@ -26,11 +26,16 @@ This platform runs on top of _Automotive Grade Linux_ or AGL which is an open-so
 The development of eclipse Kuksa plug-ins or  applications and the deployment of them can be done using the web-browsed based  IDE known as _Eclipse Che_.
 In order words, a complete toolchain is available throught _Eclipse Che_ which allows not only a fast, but also and independent platform development. 
 
-AGL
-------
+
+In addition, the cloud platform is built on top of other eclipse frameworks such as Eclipse Hono used in telemetry applications and Eclipse Ditto used to create a digital rover twin; and also provides the Kuksa app-store, so users could download an app and deploy it directly in their rovers.
+
+Automotive Grade Linux -  AGL
+--------------------------------
+
 
 Rover Services
 -----------------
+
 
 Rover Application
 -------------------

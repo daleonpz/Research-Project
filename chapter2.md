@@ -228,5 +228,20 @@ Given the given sequence of rotations and the algorithm described by [@Slabaugh1
 
 Use case implementation details
 -------------------------------
+As it was mention before the follower should be completely autonomous. 
+In order to do so, the follower will need to read data from sensors, process that data and create movement based on the results of the processing. 
 
-in this part i ll describe how marker detection works, and implementation details.
+In figure \ref{img:roverusecase} is shown a diagram of our use case. 
+The main sensor is a PiCamera, the processing part performs the marker detection the calculation of the euler angles and distance based on the equations described in the last section, and finally  the movement is generated using the driving rover services.
+
+
+**AUEAOU**  
+aueouaeotnuaehountsheotnuh aeuaoeuaetnos eaouhaoenthu. 
+atoenuhanoethunthsaotnhuaoeunhaoeu. 
+aeouhaoensthu
+
+**AOU**  
+uaeohuaoetnshutns etnahutnaeho uoeantsuhaoetnhun.
+etauhnsaetoh
+
+
