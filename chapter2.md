@@ -228,17 +228,43 @@ Given the given sequence of rotations and the algorithm described by [@Slabaugh1
 
 Use case implementation details
 -------------------------------
-As it was mention before the follower should be completely autonomous. 
-In order to do so, the follower will need to read data from sensors, process that data and create movement based on the results of the processing. 
+As it was mentioned before, the follower should be completely autonomous. 
+In order to do so, the follower will need to read data from sensors, process that data and generate movement based on the processed data. 
 
 In figure \ref{img:roverusecase} is shown a diagram of our use case. 
-The main sensor is a PiCamera, the processing part performs the marker detection the calculation of the euler angles and distance based on the equations described in the last section, and finally  the movement is generated using the driving rover services.
+The main sensor is a PiCamera, the processing part performs the marker detection on the captured frames and the calculation of the euler angles and distance based on the equations described in the last section, and finally  the movement is generated using the driving rover services.
+
+**Video Processing with OpenCV**  
+Just like in the case of camera calibration, we use `OpenCV` and the submodule `aruco`  to capture video and process the frames in order to extract information from the visual markers.
+To estimate and detect the marker at the beginning  we should load the camera intrinsic parameters, saved in a YAML file,  and the Aruco dictionary, composed by 256 marker and a marker size of 6x6 bits [@opencv_library],  to memory.
 
 
-**Image Processing with OpenCV**  
-aueouaeotnuaehountsheotnuh aeuaoeuaetnos eaouhaoenthu. 
-atoenuhanoethunthsaotnhuaoeunhaoeu. 
-aeouhaoensthu
+```c++
+cv::FileStorage fs("calibration.yml", cv::FileStorage::READ);
+cv::Ptr<cv::aruco::Dictionary> dictionary = 
+     cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
+```
+
+Given a video frame, it is possible to detect Aruco markers if they are visible.  
+When the marker is detected, we extract the four corners of the marker. The first corner is the top left corner, followed by the top right, bottom right and bottom left. 
+The next step is to estimate the extrinsic camera parameters, which means the rotation vector $\omega$ and the translation vector $\mathbf{t}$. 
+The size of the marker is an input parameter of the `OpenCV` function `cv::aruco::estimatePoseSingleMarkers`. In our case the marker size is 7cm. 
+
+
+```c
+cv::aruco::detectMarkers(image, dictionary, 
+    corners, ids);
+cv::aruco::estimatePoseSingleMarkers(
+    corners, 0.07, 
+    cameraMatrix, distCoeffs, 
+    rvec, tvec);
+```
+
+```c++
+cv::Rodrigues(rvec.row(i), rmat);
+rotationMatrixToEulerAngles(rmat, angle)
+```
+
 
 **Relevant information**   
 It's only important to check only rotation in Y-Axis because the rover-vehicle is just a car. 
