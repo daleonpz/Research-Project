@@ -41,12 +41,8 @@ Requirements
     - The follower code should be easy to read and understand.
 
 
-
-
-
 Camera calibration and the pinhole model
 -------------------------------------------
-
 If you hold that box in front of you in a dimly lit room, with the pinhole facing some light source  you see an inverted image appearing on the translucent plat [@Forsyth2002]. 
 In figure \ref{img:pinholemodel}, a 3D object (pyramid) is projected first on a scene plane, and then on the image plane. 
 Each point in the scene plane or _world frame_  will have it's correspondence in the image plane or _camera frame_. 
@@ -228,50 +224,105 @@ In order to do so, the follower will need to read data from sensors, process tha
 In figure \ref{img:roverusecase} is shown a diagram of our use case. 
 The main sensor is a PiCamera, the processing part performs the marker detection on the captured frames and the calculation of the euler angles and distance based on the equations described in the last section, and finally  the movement is generated using the driving rover services.
 
+&nbsp;
+
+
 **Video Processing with OpenCV**  
 Just like in the case of camera calibration, we use `OpenCV` and the submodule `aruco`  to capture video and process the frames in order to extract information from the visual markers.
 To estimate and detect the marker at the beginning  we should load the camera intrinsic parameters, saved in a YAML file,  and the Aruco dictionary, composed by 256 marker and a marker size of 6x6 bits [@opencv_library],  to memory.
 
 
+&nbsp;
+
+
 ```c++
+// cameraMatrix: camera intrinsic parameters 
+// dictionary: aruco dictionary
 cv::FileStorage fs("calibration.yml", cv::FileStorage::READ);
+fs["camera_matrix"] >> cameraMatrix;
 cv::Ptr<cv::aruco::Dictionary> dictionary = 
      cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
 ```
 
+&nbsp;
+
+
 Given a video frame, it is possible to detect Aruco markers if they are visible.  
-When the marker is detected, we extract the four corners of the marker. The first corner is the top left corner, followed by the top right, bottom right and bottom left. 
+When the marker is detected, we extract the four corners  of the marker using `cv::aruco::detectMarkers` function.
+The first corner is the top left corner, followed by the top right, bottom right and bottom left. 
 The next step is to estimate the extrinsic camera parameters, which means the rotation vector $\omega$ and the translation vector $\mathbf{t}$. 
 The size of the marker is an input parameter of the `OpenCV` function `cv::aruco::estimatePoseSingleMarkers`. In our case the marker size is 7cm. 
 
 
+
+&nbsp;
+
+
 ```c
-cv::aruco::detectMarkers(image, dictionary, 
-    corners, ids);
-cv::aruco::estimatePoseSingleMarkers(
-    corners, 0.07, 
-    cameraMatrix, distCoeffs, 
-    rvec, tvec);
+// image: input frame 
+// corners: detected corners
+// rvect: rotation vector
+// tvect: translation vector
+cv::aruco::detectMarkers(image, dictionary, corners, ids);
+cv::aruco::estimatePoseSingleMarkers( corners, 0.07, 
+                                cameraMatrix, 0, rvec, tvec);
 ```
 
+&nbsp;
+
+
+The next step is calculating the Euler angles by using function `cv::Rodrigues`  and  Slabaugh's algorithm. 
+The `cv:Rodrigues` function is a direct implementation of equations \ref{eq:crossproductmatrix} and \ref{eq:rodrigues}. 
+
+
+&nbsp;
+
+
 ```c++
-cv::Rodrigues(rvec.row(i), rmat);
+// rmat: rotation matrix
+// angle: Euler angles
+cv::Rodrigues(rvec.row, rmat);
 rotationMatrixToEulerAngles(rmat, angle)
 ```
 
 
-**Relevant information**   
-It's only important to check only rotation in Y-Axis because the rover-vehicle is just a car. 
+&nbsp;
+
+However, the estimated angles can not be used directly because estimations have small errors.
+Thus, in order to minimize the estimation error a filter is needed.  
+We apply a simple average filter because there is no need to storage past values, it has been observed that the error are small
 
 
-**GY-521: Gyroscope Reading**  
-The CY-521 sensor is an accelerometer and gyroscope, with that information we could estimate the angular position of follower. 
-However, since the follower has none magnetometer the information given by the accelerometer is useless, since we have no information about the _magnetic north_. 
+ and works in practice.
 
 
 
-uaeohuaoetnshutns etnahutnaeho uoeantsuhaoetnhun.
-etauhnsaetoh
+&nbsp;
+
+
+**Rover rotations**   
+Rover is a  ground vehicle which means that only steer in one axis. 
+Thus, only rotations in Y-Axis are possible. 
+Aas shown in figure \ref{img:roverrotations} rotations in X-axis are not possible since the rover can not fly or go underground.  The same applies to rotations in Z-axis.
+In other words, the only relevant information from the estimated euler angles is $\rho$, or the angle related the Y-axis.
+
+![Rotation rotations (a) Rotation in X-axis (b) Rotation in Y-axis  \label{img:roverrotations}](img/roverrotation.jpg)
+
+&nbsp;
+
+
+
+**Accelerometer and gyroscope readings**  
+In order to move the follower to a defined angular position, the CY-521 is used.
+The CY-521 sensor is an accelerometer and gyroscope, with that information we could estimate the angular position of follower.
+However, since the follower has none magnetometer due to technical issues the information given by the accelerometer is useless, since we have no information about the _magnetic north_. 
+In other words, we only can know that 
+
+yaw can be measured by rate gyro and magnetometer not with accelerometer because accelerometer values depends on gravity component but on rotation in z axis only there is no change in gravity componets
+
+
+The accelerometer works by measuring the components of gravity in the diferrent axis, taking the "earth" as reference.
+
 
 
 
