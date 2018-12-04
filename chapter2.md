@@ -42,12 +42,6 @@ Requirements
 
 
 
-Hardware and Software 
-----------------------
-As it was mentioned in the introduction, the rover vehicle is based on a raspberry pi 3 that can run _Raspbian Jessie_ or _AGL_ as Operating system.
-For this use case the follower runs a  _Raspbian Jessie_ image.
-The available hardware
-
 
 
 Camera calibration and the pinhole model

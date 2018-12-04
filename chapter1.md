@@ -32,6 +32,16 @@ In addition, the cloud platform is built on top of other eclipse frameworks such
 Automotive Grade Linux -  AGL
 --------------------------------
 
+In-vehiche Platform (Rover)
+----------------------------
+The  in-vehicle platform or Rover is based on a raspberry pi 3 that can run _Raspbian Jessie_ or _AGL_ as Operating system.
+The available hardware is shown in figure \ref{img:rovercomponents}. 
+There are two layers besides the raspberry pi. 
+The _Motor driver_ layer based on a MC33926 Motor Driver, and the _Sense_ layer, a customly made circuit board that is designed as a shield on top of MC33926 [@App4mc2017]. 
+The Sense layer provides interfaces for sensors (accelerometers, magnetometer, infrared, ultrasonic, humidity and temperature), buttons, buzzer and OLED display. 
+ 
+![Rover Components [@App4mc2017] \label{img:rovercomponents}](img/rovercomponents.png)
+
 
 Rover Services
 -----------------
