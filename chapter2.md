@@ -312,16 +312,66 @@ In other words, the only relevant information from the estimated euler angles is
 
 
 
-**Accelerometer and gyroscope readings**  
+**Measuring angular displacement**  
 In order to move the follower to a defined angular position, the CY-521 is used.
-The CY-521 sensor is an accelerometer and gyroscope, with that information we could estimate the angular position of follower.
-However, since the follower has none magnetometer due to technical issues the information given by the accelerometer is useless, since we have no information about the _magnetic north_. 
-In other words, we only can know that 
+The CY-521 has an accelerometer and a gyroscope.
+The accelerometer works by measuring the components of gravity in the diferrent axis, taking the "earth" or gravity acceleration as reference.
+On the other hand, the gyroscope measures angular speed relative to itself or own rotation, using the inertial force called the Coriolis effect.
 
-yaw can be measured by rate gyro and magnetometer not with accelerometer because accelerometer values depends on gravity component but on rotation in z axis only there is no change in gravity componets
+With that information we could estimate the angular position of follower.
+However, the values from the accelerometer are not taking into account because the gravity vector is parallel to the Y-axis.
+It is important to note that we want to measure relative rotations, thus in the inital position the angle will always be $0$.
 
 
-The accelerometer works by measuring the components of gravity in the diferrent axis, taking the "earth" as reference.
+The gyroscope measures angular speed in all axis, in particular the angular speed in  Y-axis or  $\omega_{y}$.
+The angular displacement $\rho$ is just the integral of $\omega_{y}$. 
+
+\begin{equation}
+\rho = \int \omega_{y}(t) dt 
+\end{equation}
+
+
+\begin{equation}
+\omega_{y} = \frac{\delta \rho}{\delta t}
+\end{equation}
+
+Nonetheless, the calculation is done in a computer, thus we use the _Forward Euler Method_ to solve the integral.
+
+\begin{equation}
+\rho \lbrack n+1\rbrack= \rho \lbrack n \rbrack + \Delta t \omega_{y} \lbrack n \rbrack
+\end{equation}
+
+
+where $\Delta t$ is the sampling period between sensor readings and $\rho \lbrack 0 \rbrack = 0$. 
+
+&nbsp;
+
+**Implementation**  
+The activity diagram of use case is shown in figure  \ref{img:activitydiagram}.
+First, the rover API is initialized, it also includes the motor and sensors, and the camera intrinsic parameters are load into memory as described before. 
+
+&nbsp;
+
+```c
+RoverBase r_base; /* Rover API */ 
+RoverDriving r_driving;  /* Rover driving service */
+RoverGY521 r_accel; /* gyro and accelerometer */
+```
+
+&nbsp;
+
+
+
+![Activity diagram \label{img:activitydiagram}](img/activitydiagram.png)
+
+
+After the inital set up, a infinity loop starts.
+During the loop we estimate $\rho$ and distance $d$, the later is the norm of the translation vector $d = \left\lVert \mathbf{t} \right\rVert_{2}$.
+The motion is done in two steps: rotation and then translation. 
+The follower rotates $\rho$ degrees, when it is done, it go forward $d$ centimeters. 
+The current distance is measured using the ultrasonic sensor.
+
+Once the follower reaches the leader, it stops and wait until the leader moves again.
 
 
 
