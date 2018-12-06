@@ -289,12 +289,33 @@ rotationMatrixToEulerAngles(rmat, angle)
 &nbsp;
 
 However, the estimated angles can not be used directly because estimations have small errors.
-Thus, in order to minimize the estimation error a filter is needed.  
-We apply a simple average filter because there is no need to storage past values, it has been observed that the error are small
+In figure \ref{img:axisplot} can be observed the values of the rotation angles in a span of 1000 samples and in table 2.1 the stadistics of those samples.
+The ground truth values for euler angles were $\lbrack 0, 0, 0\rbrack$, and for distance were 47.5 and 16  centimeters respectively. 
+
+Data          Mean        $\sigma$    Median  
+----------   ------------ ---------- -------------
+$\psi$ deg    0.719853     0.162262    0.723000  
+$\rho$ deg    0.584508     0.165382    0.507618  
+$\phi$ deg    1.155499     0.046940    1.157000   
+$d$ cm        45.51706     0.033564    45.50772  
+$d$ cm        15.65339     0.007401    15.65401
+
+Table: Stadistics of estimated euler angles and distance to visual marker
 
 
- and works in practice.
+The results of standard deviation $\sigma$  from table 2.1 suggest the estimated values can be stable ($\sigma < 0.16$ deg) overall, particularly in the case of distance to the marker ($\sigma < 0.04cm$)
+However, figure \ref{img:axisplot} suggests the existence of pike values, thus we must filter the samples in order to minimize the effect of those outliers. 
+A mean filter is used because the results showed that the mean and the median of euler angles are similar,  also it is simple to implement and requires no memory to save previous values. 
+The implementation is similar to the following code:
 
+```c
+estAngle = 0;
+for( i=0; i<samples; i++)
+    estAngle += new_value;       
+estAngle /= samples; 
+``` 
+
+![Angles in X-axis $\psi$, Y-axis $\rho$ and Z-axis $\phi$ \label{img:axisplot}](img/axis_plot.png)
 
 
 &nbsp;
