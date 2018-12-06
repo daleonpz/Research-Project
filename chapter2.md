@@ -101,7 +101,8 @@ The procedure to calibrate the PiCamera is straightforward with `OpenCV` and the
 4. When you are done, just close the program 
 
 
-**ADD PICTURE OF THE PATTERN ON MY OFFICE**
+![Some camera views used for calibration \label{img:cameracalibration}](img/camera_calibration.jpg)
+
 
 In our case, the camera intrinsic matrix $\mathbf{A}$ is as following:
 
@@ -270,9 +271,11 @@ cv::aruco::estimatePoseSingleMarkers( corners, 0.07,
 
 &nbsp;
 
+![Camera axis \label{img:cameraaxis}](img/camera_axis.png)
 
 The next step is calculating the Euler angles by using function `cv::Rodrigues`  and  Slabaugh's algorithm. 
 The `cv:Rodrigues` function is a direct implementation of equations \ref{eq:crossproductmatrix} and \ref{eq:rodrigues}. 
+An example is  shown in figure  \ref{img:cameraaxis}, the euler angles for the marker are $\psi = 5$, $\rho = 0$ and $\psi = 18$.
 
 
 &nbsp;
@@ -287,6 +290,8 @@ rotationMatrixToEulerAngles(rmat, angle)
 
 
 &nbsp;
+
+
 
 However, the estimated angles can not be used directly because estimations have small errors.
 In figure \ref{img:axisplot} can be observed the values of the rotation angles in a span of 1000 samples and in table 2.1 the stadistics of those samples.
@@ -305,8 +310,9 @@ Table: Stadistics of estimated euler angles and distance to visual marker
 
 The results of standard deviation $\sigma$  from table 2.1 suggest the estimated values can be stable ($\sigma < 0.16$ deg) overall, particularly in the case of distance to the marker ($\sigma < 0.04cm$)
 However, figure \ref{img:axisplot} suggests the existence of pike values, thus we must filter the samples in order to minimize the effect of those outliers. 
-A mean filter is used because the results showed that the mean and the median of euler angles are similar,  also it is simple to implement and requires no memory to save previous values. 
-The implementation is similar to the following code:
+A median filter is highly effective removing outliers from data, but requires to save in memory chunks of data, but because the results showed that the mean and the median of euler angles are similar, thus it is reasonable to think that outliers has small influence on the data.
+In other words, the mean filter is a simple and effective option againts outliers problem. Its implementation is straighforward and requires no memory to save previous values. 
+An implementation is shown as follows:
 
 ```c
 estAngle = 0;
