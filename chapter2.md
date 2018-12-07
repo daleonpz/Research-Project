@@ -275,7 +275,7 @@ cv::aruco::estimatePoseSingleMarkers( corners, 0.07,
 
 The next step is calculating the Euler angles by using function `cv::Rodrigues`  and  Slabaugh's algorithm. 
 The `cv:Rodrigues` function is a direct implementation of equations \ref{eq:crossproductmatrix} and \ref{eq:rodrigues}. 
-An example is  shown in figure  \ref{img:cameraaxis}, the euler angles for the marker are $\psi = 5$, $\rho = 0$ and $\psi = 18$.
+An example is  shown in figure  \ref{img:cameraaxis}, the euler angles are $\psi = 165$, $\rho = 25$ and $\psi = 0$.
 
 
 &nbsp;
