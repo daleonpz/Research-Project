@@ -4,11 +4,10 @@ TITLE = Developing a Rover-Following Application for APPSTACLE
 AUTHOR = Daniel Paredes 
 ADVISOR = Robert Höttger
 UNIVERSITY = Fachhochschule Dortmund 
-DEPARTMENT = No idea of the Department 
-RESEARCH_GROUP = Das Institut für die Digitalisierung von Arbeits- und Lebens­welten (IDiAL)  
+RESEARCH_GROUP = Institut für die Digitalisierung von Arbeits- und Lebens­welten (IDiAL)  
 THESIS_TYPE = Research Project
 DOCUMENT_LANG = english
-SOURCE_FILES = abstract.md chapter1.md chapter2.md chapter3.md chapter4.md summary.md acknowledgements.md bibliography.md
+SOURCE_FILES = abstract.md chapter1.md chapter2.md chapter3.md chapter4.md chapter5.md summary.md  bibliography.md
 APPENDIX_FILE = appendix.md
 
 # variables for the PDF/HTML compiler
@@ -20,7 +19,6 @@ ARGS = \
 	--variable=author:"$(AUTHOR)" \
 	--variable=advisor:"$(ADVISOR)" \
 	--variable=university:"$(UNIVERSITY)" \
-	--variable=department:"$(DEPARTMENT)" \
 	--variable=research-group:"$(RESEARCH_GROUP)" \
 	--variable=thesis-type:"$(THESIS_TYPE)" \
 	--variable=lof \

@@ -339,6 +339,9 @@ As expected from the pin hole model, $\psi$ is near 180 because the image is fac
 
 A basic code for video processing the marker  is as follows:
 
+&nbsp;
+
+
 ```c
 // Initialization 
 cv::VideoCapture inputVideo(0);
@@ -363,6 +366,9 @@ rotationMatrixToEulerAngles(rmat, angles);
 ```
 
 
+&nbsp;
+
+
 
 
 However, the estimated angles can not be used directly because estimations have small errors.
@@ -380,11 +386,19 @@ $d$ cm        15.65339     0.007401    15.65401
 Table: Statistics of estimated euler angles and distance to visual marker
 
 
+&nbsp;
+
+
+![Angles in X-axis $\psi$, Y-axis $\rho$ and Z-axis $\phi$ \label{img:axisplot}](img/axis_plot.png)
+
+
 The results of standard deviation $\sigma$  from table 2.2 suggest the estimated values can be stable ($\sigma < 0.16$ deg) overall, particularly in the case of distance to the marker ($\sigma < 0.04cm$)
 However, figure \ref{img:axisplot} suggests the existence of pike values, thus we must filter the samples in order to minimize the effect of those outliers. 
 A median filter is highly effective removing outliers from data, but requires to save chunks of datain memory, but because the results showed that the mean and the median of euler angles are similar, thus it is reasonable to think that outliers has small influence on the data.
 In other words, the mean filter is a simple and effective option againts outliers problem. Its implementation is straighforward and requires no memory to save previous values. 
 A pseudocode is as follows:
+
+&nbsp;
 
 ```c
 estAngle = 0;
@@ -392,9 +406,6 @@ for( i=0; i<samples; i++)
     estAngle += new_value;       
 estAngle /= samples; 
 ``` 
-
-![Angles in X-axis $\psi$, Y-axis $\rho$ and Z-axis $\phi$ \label{img:axisplot}](img/axis_plot.png)
-
 
 &nbsp;
 

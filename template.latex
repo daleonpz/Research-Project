@@ -207,7 +207,7 @@ $endfor$
 \textsc{\Large $thesis-type$}\\[4cm]
 
 \begin{tabular}{cc}
- \makebox[7cm]{\emph{Author}} & \makebox[7cm]{\emph{Advisor}} \\
+ \makebox[7cm]{\emph{Author}} & \makebox[7cm]{\emph{Supervisor}} \\
  \makebox[7cm]{$author$} & \makebox[7cm]{$advisor$}
 \end{tabular}
 
