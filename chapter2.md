@@ -22,23 +22,66 @@ The  following sections will describe requirements, main hardware parts involved
 
 Requirements
 -------------------
-**Still have no idea how to write them**
-- The system is the follower, but it doesn't actually matter right now. 
+The main requirements for the rover follower are listed in table 2.1. 
 
 
-- Functional requirements? 
-    - The follower should detect a visual marker.
-    - The follower should estimate the distance and angle to the marker.
-    - The follower should steer based on the estimated values.
-    - The follower should be completely autonomous. 
+--------------------------------------------------------------------
+Requirement     Description  
+----------      ----------------------------------------------------
+Detect visual   The follower should detect an Aruco Marker  using
+marker          the PiCamera mounted on it. The camera field of 
+                vision should contain the marker, and this one
+                should be within 100cm of radius.   
 
-- Software requirements? 
-    - The follower should run Raspbian  as operating system.
-    - The follower code should use OpenCV library.
-    - The follower code should be based on rover-app libraries. 
-    - The follower code should be mantainable.
-    - The follower code should be reusable.
-    - The follower code should be easy to read and understand.
+Estimation      The follower should estimate the angle and distance 
+angle and       to the marker everytime the leader moves to another 
+distance        position. 
+
+Follower        The follower should steer based on the estimated 
+driving         values. It should first rotate based on the estimated
+                angle, and then drive forward based on the estamited
+                distance, but it should stop when is within 5cm of
+                radius from the leader. 
+
+Leader          The leader should only move to a new position when
+movement        the follower reaches it. 
+
+Autonomous      The follower should be completely autonomous. 
+driving         Detection of the marker and driving should be done
+                with no human intervention other than turning on the
+                rover and inital positioning.  
+
+Operating       The follower should run Rasbian Jessie VX.X as 
+system          operation system. 
+
+OpenCV          The follower should use OpenCV 3.4.1 [@opencv_library] for the video
+library         processing including reading video frames, marker
+                detection, and estimation of the angle and distance
+                to the marker. 
+
+Rover-App       The follower code should be based on the services such
+library         as sensor reading and driving provided by the 
+                rover-app library. 
+
+Mantainability  The follower code should be mantainable following 
+                principles of modularity and encapsulation, and 
+                avoiding code duplication code. 
+
+Reusable        The follower code should be reusable. Subroutines
+                or functions should be well defined, and it's 
+                design should take into account orthogonality 
+                and extensibility. 
+
+Understanbility the follower code should be understandable. Comments
+                should be relevant, variable and function names
+                should be self explanatory, the code sections should
+                be well defined (includes, global/static/volatile
+                variables declarations, function definitions, 
+                main function).
+
+--------------------------------------------------------------------
+
+Table: Statistics of estimated euler angles and distance to visual marker
 
 
 Camera calibration and the pinhole model
@@ -334,10 +377,10 @@ $\phi$ deg    1.155499     0.046940    1.157000
 $d$ cm        45.51706     0.033564    45.50772  
 $d$ cm        15.65339     0.007401    15.65401
 
-Table: Stadistics of estimated euler angles and distance to visual marker
+Table: Statistics of estimated euler angles and distance to visual marker
 
 
-The results of standard deviation $\sigma$  from table 2.1 suggest the estimated values can be stable ($\sigma < 0.16$ deg) overall, particularly in the case of distance to the marker ($\sigma < 0.04cm$)
+The results of standard deviation $\sigma$  from table 2.2 suggest the estimated values can be stable ($\sigma < 0.16$ deg) overall, particularly in the case of distance to the marker ($\sigma < 0.04cm$)
 However, figure \ref{img:axisplot} suggests the existence of pike values, thus we must filter the samples in order to minimize the effect of those outliers. 
 A median filter is highly effective removing outliers from data, but requires to save chunks of datain memory, but because the results showed that the mean and the median of euler angles are similar, thus it is reasonable to think that outliers has small influence on the data.
 In other words, the mean filter is a simple and effective option againts outliers problem. Its implementation is straighforward and requires no memory to save previous values. 
