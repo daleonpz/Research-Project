@@ -43,6 +43,7 @@ Requirements
 
 Camera calibration and the pinhole model
 -------------------------------------------
+Camera calibration is a necessary step in 3D computer vision in order to extract metric information from 2D images [@Zhang2004]. 
 If you hold that box in front of you in a dimly lit room, with the pinhole facing some light source  you see an inverted image appearing on the translucent plat [@Forsyth2002]. 
 In figure \ref{img:pinholemodel}, a 3D object (pyramid) is projected first on a scene plane, and then on the image plane. 
 Each point in the scene plane or _world frame_  will have it's correspondence in the image plane or _camera frame_. 
@@ -51,7 +52,6 @@ The distance from the pinhole to the image plane is called focal lenght.
 
 ![The pinhole imaging model [@Garcia2001]. \label{img:pinholemodel}](img/pinholemodel-complete.png)
 
-Camera calibration is a necessary step in 3D computer vision in order to extract metric information from 2D images [@Zhang2004]. 
 The mathematical model of a pinhole camera can be devired using linear algebra and the visual representation  shown in figure \ref{img:pinholemodel}. 
 <!--
  (I may add in the appendix the derivation of the equations)
@@ -230,7 +230,7 @@ The main sensor is a PiCamera, the processing part performs the marker detection
 
 **Video Processing with OpenCV**  
 Just like in the case of camera calibration, we use `OpenCV` and the submodule `aruco`  to capture video and process the frames in order to extract information from the visual markers.
-To estimate and detect the marker at the beginning  we should load the camera intrinsic parameters, saved in a YAML file,  and the Aruco dictionary, composed by 256 marker and a marker size of 6x6 bits [@opencv_library],  to memory.
+To estimate and detect the marker at the beginning  we should load the camera intrinsic parameters, saved in a YAML file,  and the Aruco dictionary, composed by 250 markers and a marker size of 6x6 bits [@opencv_library],  to memory.
 
 
 &nbsp;
@@ -248,7 +248,7 @@ cv::Ptr<cv::aruco::Dictionary> dictionary =
 &nbsp;
 
 
-Given a video frame, it is possible to detect Aruco markers if they are visible.  
+Given a video frame, it is possible to detect Aruco markers if they are visible.
 When the marker is detected, we extract the four corners  of the marker using `cv::aruco::detectMarkers` function.
 The first corner is the top left corner, followed by the top right, bottom right and bottom left. 
 The next step is to estimate the extrinsic camera parameters, which means the rotation vector $\omega$ and the translation vector $\mathbf{t}$. 
@@ -271,12 +271,9 @@ cv::aruco::estimatePoseSingleMarkers( corners, 0.07,
 
 &nbsp;
 
-![Camera axis \label{img:cameraaxis}](img/camera_axis.png)
 
 The next step is calculating the Euler angles by using function `cv::Rodrigues`  and  Slabaugh's algorithm. 
 The `cv:Rodrigues` function is a direct implementation of equations \ref{eq:crossproductmatrix} and \ref{eq:rodrigues}. 
-An example is  shown in figure  \ref{img:cameraaxis}, the euler angles are $\psi = 165$, $\rho = 25$ and $\psi = 0$.
-
 
 &nbsp;
 
@@ -290,6 +287,38 @@ rotationMatrixToEulerAngles(rmat, angle)
 
 
 &nbsp;
+
+An example is  shown in figure  \ref{img:cameraaxis}, the euler angles are $\psi = 165$, $\rho = 25$ and $\psi = 0$. The green, red and blue axes correspond to the X-axis, Y-axis and Z-axis respectively.
+As expected from the pin hole model, $\psi$ is near 180 because the image is facing the camera as result the blue axis points towards the camera.
+
+![Camera axis \label{img:cameraaxis}](img/camera_axis.png)
+
+
+A basic code for video processing the marker  is as follows:
+
+```c
+// Initialization 
+cv::VideoCapture inputVideo(0);
+cv::FileStorage fs("calibration.yml", cv::FileStorage::READ);
+fs["camera_matrix"] >> cameraMatrix;
+fs["distortion_coefficients"] >> distCoeffs;
+
+inputVideo.open(0);
+cv::Ptr<cv::aruco::Dictionary> dictionary = 
+    cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
+...
+
+// Video processing  
+inputVideo.read(image);
+cv::aruco::detectMarkers(
+    image, dictionary, corners, ids);
+cv::aruco::estimatePoseSingleMarkers(
+    corners, 0.07, cameraMatrix, 
+    distCoeffs, rvec, tvec);
+cv::Rodrigues(rvec, rmat);
+rotationMatrixToEulerAngles(rmat, angles);
+```
+
 
 
 
@@ -310,9 +339,9 @@ Table: Stadistics of estimated euler angles and distance to visual marker
 
 The results of standard deviation $\sigma$  from table 2.1 suggest the estimated values can be stable ($\sigma < 0.16$ deg) overall, particularly in the case of distance to the marker ($\sigma < 0.04cm$)
 However, figure \ref{img:axisplot} suggests the existence of pike values, thus we must filter the samples in order to minimize the effect of those outliers. 
-A median filter is highly effective removing outliers from data, but requires to save in memory chunks of data, but because the results showed that the mean and the median of euler angles are similar, thus it is reasonable to think that outliers has small influence on the data.
+A median filter is highly effective removing outliers from data, but requires to save chunks of datain memory, but because the results showed that the mean and the median of euler angles are similar, thus it is reasonable to think that outliers has small influence on the data.
 In other words, the mean filter is a simple and effective option againts outliers problem. Its implementation is straighforward and requires no memory to save previous values. 
-An implementation is shown as follows:
+A pseudocode is as follows:
 
 ```c
 estAngle = 0;
@@ -340,7 +369,7 @@ In other words, the only relevant information from the estimated euler angles is
 
 
 **Measuring angular displacement**  
-In order to move the follower to a defined angular position, the CY-521 is used.
+In order to move the follower to a defined angular position, the CY-521 board is used.
 The CY-521 has an accelerometer and a gyroscope.
 The accelerometer works by measuring the components of gravity in the diferrent axis, taking the "earth" or gravity acceleration as reference.
 On the other hand, the gyroscope measures angular speed relative to itself or own rotation, using the inertial force called the Coriolis effect.
@@ -369,9 +398,34 @@ Nonetheless, the calculation is done in a computer, thus we use the _Forward Eul
 \end{equation}
 
 
-where $\Delta t$ is the sampling period between sensor readings and $\rho \lbrack 0 \rbrack = 0$. 
+where $\Delta t$ is the sampling period between sensor readings and $\rho \lbrack 0 \rbrack = 0$. A pseudocode of the rotation routine is as follows:
+
 
 &nbsp;
+
+
+
+```c
+current_angle = 0;
+
+// clockwise rotation 
+if( desired_angle <=0 ) turnRight();
+// counterclockwise rotation
+else turnLeft();
+
+while( abs(current_angle - desired_angle) > 0)
+        wait(sampling_period);
+        current_angle += getAngle()*sampling_period;
+
+stop();
+```
+
+
+&nbsp;
+
+
+
+
 
 **Implementation**  
 The activity diagram of use case is shown in figure  \ref{img:activitydiagram}.
@@ -383,6 +437,9 @@ First, the rover API is initialized, it also includes the motor and sensors, and
 RoverBase r_base; /* Rover API */ 
 RoverDriving r_driving;  /* Rover driving service */
 RoverGY521 r_accel; /* gyro and accelerometer */
+/* Ultrasonic sensors */ 
+RoverHCSR04 r_front = RoverHCSR04(ROVER_FRONT);
+RoverHCSR04 r_rear  = RoverHCSR04(ROVER_REAR); 
 ```
 
 &nbsp;
@@ -393,12 +450,41 @@ RoverGY521 r_accel; /* gyro and accelerometer */
 
 
 After the inital set up, a infinity loop starts.
-During the loop we estimate $\rho$ and distance $d$, the later is the norm of the translation vector $d = \left\lVert \mathbf{t} \right\rVert_{2}$.
-The motion is done in two steps: rotation and then translation. 
-The follower rotates $\rho$ degrees, when it is done, it go forward $d$ centimeters. 
-The current distance is measured using the ultrasonic sensor.
+During the loop we estimate the angle $\rho$ and distance $d$, the later is the norm of the translation vector $d = \left\lVert \mathbf{t} \right\rVert_{2}$.
+The motion is done in two steps: rotation and translation. 
+The follower rotates $\rho$ degrees and when it is done, it goes forward $d$ centimeters. 
+The current distance is measured using the front ultrasonic ranging module HC-SC04.
+The rover-API can only give accuarate information for distances lower than 40 cm [@roverAPI], for distances greater than 40cm the API returns always 40cm.
+However, that's not a problem because the follower is already rotate when the forward movement starts. 
+Thus, when the follower approaches the leader eventually will be in the measurable range. 
 
 Once the follower reaches the leader, it stops and wait until the leader moves again.
+A pseudocode of the loop is as follows:
+
+&nbsp;
+
+
+
+```c
+while(1){
+    // Initialization of the current values
+    estimated_angle = 0;
+    estimated_distance = 0;
+
+    // Mean filter
+    for(i=0; i<nSamples; i++){
+        readFrame();
+        [rvec, tvec] = getExtrinsicParameters();
+        estimated_angle += getYrotation(rvec);
+        }
+    estimated_angle /= nSamples;
+    estimated_distance = norm(tvec); 
+
+    // Driving routines
+    rotateNdegrees(estimated_angle);
+    moveForwoard(estimated_distance);
+}
+```
 
 
 
