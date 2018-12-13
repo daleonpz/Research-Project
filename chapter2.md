@@ -515,6 +515,35 @@ Thus, when the follower approaches the leader eventually will be in the measurab
 Once the follower reaches the leader, it stops and wait until the leader moves again.
 A pseudocode of the loop is as follows:
 
+http://ksimek.github.io/2013/08/13/intrinsic/
+
+
+\begin{equation}
+P = \overbrace{K}^\text{Intrinsic Matrix} \times \overbrace{[R \mid  \mathbf{t}]}^\text{Extrinsic Matrix}
+\end{equation}
+
+\begin{equation}
+\overbrace{
+    \underbrace{
+         \left( \begin{array}{c | c} 
+        I & \mathbf{t}
+         \end{array}\right)
+    }_\text{3D Translation}
+    \times
+    \underbrace{
+         \left( \begin{array}{c | c} 
+        R & 0 \\ \hline
+        0 & 1
+         \end{array}\right)
+    }_\text{3D Rotation}
+}^\text{Extrinsic Matrix}
+\end{equation}
+
+
+
+
+
+
 &nbsp;
 
 
