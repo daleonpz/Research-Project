@@ -478,6 +478,57 @@ stop();
 &nbsp;
 
 
+**Camera Projection and rover driving**  
+As mentioned at the beginnig of this chapter, in the pin hole camera model the 2D point $\mathbf{\hat{m}}$ and the 3D $\mathbf{\hat{M}}$ are related throught a projection matrix $\mathbf{P}$, and the camera projection matrix $\mathbf{P}$ is formed by the combination of extrinsic and intrinsic camera parameters. 
+In order to move the follower to the leader position, we must find $\mathbf{\hat{M}}$ given $\mathbf{\hat{m}}$.
+
+
+\begin{equation}
+\mathbf{\hat{m}} = \mathbf{P}\mathbf{\hat{M}} = \mathbf{A}\lbrack \mathbf{R} \quad \mathbf{t} \rbrack \mathbf{\hat{M}}
+\end{equation}
+
+\begin{equation}
+\mathbf{P} = \overbrace{\mathbf{A}}^\text{Intrinsic Matrix} \times \overbrace{[\mathbf{R} \mid  \mathbf{t}]}^\text{Extrinsic Matrix}
+\end{equation}
+
+\begin{equation}
+m_{2D} = \mathbf{A}^{-1} \mathbf{\hat{m}} = \mathbf{R} \mathbf{\hat{M}} +  \mathbf{t} 
+\end{equation}
+
+The $m_{2D}$ is used by `OpenCV` to estimated rotation and translation vectors.
+In addition, $\lbrack \mathbf{R} \quad \mathbf{t} \rbrack \mathbf{\hat{M}}$ becomes $\mathbf{R} \mathbf{\hat{M}} +  \mathbf{t}$ because the last element of $\mathbf{\hat{M}}$ is 1.
+Si
+
+\begin{equation}
+ \mathbf{R}^{-1}( m_{2D} -  \mathbf{t})  =\mathbf{\hat{M}} 
+\end{equation}
+
+Since rotation matrix is orthogonal:
+
+
+\begin{equation}
+ \mathbf{R}^{T}( m_{2D} -  \mathbf{t})  =\mathbf{\hat{M}} 
+\end{equation}
+
+Thus, the rover follower first should drive forward and ther rotate in order to reach to leader position. 
+On the other hand, since the follower only rotates in Y-axis we only need to change the direction of the rotation and translation.
+
+
+\begin{equation}
+R_{y}(\rho )  =
+\begin{bmatrix}
+\cos \rho & 0& \sin \rho \\ 0& 1& 0\\ -\sin \rho & 0& \cos \rho 
+\end{bmatrix}
+\end{equation}
+
+\begin{equation}
+R_{y}(\rho )^{T} =  R_{y}(-\rho) 
+\end{equation}
+
+
+
+
+&nbsp;
 
 
 
@@ -515,35 +566,6 @@ Thus, when the follower approaches the leader eventually will be in the measurab
 Once the follower reaches the leader, it stops and wait until the leader moves again.
 A pseudocode of the loop is as follows:
 
-http://ksimek.github.io/2013/08/13/intrinsic/
-
-
-\begin{equation}
-P = \overbrace{K}^\text{Intrinsic Matrix} \times \overbrace{[R \mid  \mathbf{t}]}^\text{Extrinsic Matrix}
-\end{equation}
-
-\begin{equation}
-\overbrace{
-    \underbrace{
-         \left( \begin{array}{c | c} 
-        I & \mathbf{t}
-         \end{array}\right)
-    }_\text{3D Translation}
-    \times
-    \underbrace{
-         \left( \begin{array}{c | c} 
-        R & 0 \\ \hline
-        0 & 1
-         \end{array}\right)
-    }_\text{3D Rotation}
-}^\text{Extrinsic Matrix}
-\end{equation}
-
-
-
-
-
-
 &nbsp;
 
 
@@ -564,11 +586,11 @@ while(1){
     estimated_distance = norm(tvec); 
 
     // Driving routines
-    rotateNdegrees(estimated_angle);
     moveForwoard(estimated_distance);
+    rotateNdegrees(estimated_angle);
 }
 ```
 
-
+&nbsp;
 
 
