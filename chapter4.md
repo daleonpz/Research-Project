@@ -18,7 +18,10 @@ There is a maximun $\rho$ angle in clockwise and counterclockwise directions tha
 In figure "rotations" is shown the position and angle of the roverleader so the marker can be still detectable. 
 For counterclockwise rotations the maximum angle is $\rho = -77$ degrees and for clockwise rotations is $\rho = 72$ degrees. 
 
-
+Traveled distance
+-----------------------
+45 deg the ultrasonic sensors fails
+- Error due to there is no way to actually measure distance travelled 
 
 
 Building AGL...

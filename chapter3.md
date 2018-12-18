@@ -1,10 +1,74 @@
 Results  and Discussion
 ==========================
 
-Results
--------------------
+In this chapter, we evaluate the behavior of the follower in an controlled environment. 
+We present the results of three test cases: known distance and angle, difference between ultrasonic sensor and camera, and failed scenarios.
+Our experiments consisted in three steps:
+    - Set a known initial and final position.
+    - Turn on follower rover
+    - Measure the deviation from expected final position 
+We measured the deviation using the front ultrasonic sensor, the PiCamera and a ruler, because extreme precision, less than millimeters, are not required.  
 
-None so far
+Known distance and angle
+----------------------------
+In this test case we evaluated followers accuracy to reach the desired position and orientation.
+The different setting and initial camera estimations are presented on table 3.1.
+
+                    1               2               3               4               5
+------------        ------          --------        --------        ------          ----------
+Distance            70              70              70              70              100    
+Est. Distance       73.48           71.64           73.42           71.70           103.37 
+Absolute Error      3.48            1.64            3.42            1.70            3.37
+Relative Error      4.97%           2.34%           4.89%           2.43%           3.37% 
+Angle $\rho$        $30^\circ$      $-30^\circ$     $16^\circ$      $-16^\circ$     $0^\circ$
+Est. Angle $\rho$   $32.43^\circ$   $-27.47^\circ$  $15.78^\circ$   $-15.73^\circ$  $-2.84^\circ$ 
+Absolute Error      $2.43^\circ$    $2.53^\circ$    $0.22^\circ$    $0.27^\circ$    $2.84^\circ$
+Relative Error      8.1%            8.43%           1.38%           1.69%           $\infty$ 
+
+
+Table: Initial settings and estimations 
+
+                    1               2               3               4               5
+------------        ------          --------        --------        ------          ----------
+Distance            4.8             4.2             8.8             5.2             5.90    
+Est. Distance       5.48            4.64            9.50            5.72            6.44 
+Absolute Error      0.68            0.44            0.70            0.52            0.54   
+Relative Error      14.17%          10.48%          7.95%           10.00%          9.15% 
+Aprox. Angle $\rho$  $1.54^\circ$    $2.75^\circ$    $1.71^\circ$    $0.95^\circ$    $2.10^\circ$
+Est. Angle $\rho$   $3.58^\circ$    $5.50^\circ$    $2.62^\circ$    $3.40^\circ$    $2.25^\circ$
+Absolute Error      $2.04^\circ$    $2.75^\circ$    $0.91^\circ$    $2.45^\circ$    $0.15^\circ$ 
+Relative Error      132.47%         100%            53.22%          257.89%         7.14% 
+
+Table: Measurements and final estimations
+
+
+
+Difference between ultrasonic sensor and camera
+-----------------------
+
+                    1               2               3           4       5    
+------------        ------          --------        --------    -----   ------
+Distance            70              50              20          15      13
+PiCamera            71.52           51.24           20.32       15.41   13.72
+Absolute Error      1.52            1.24            0.32        0.41    0.72
+Relative Error      2.17%           2.48%           1.60%       2.73%   5.54%
+Ultrasonic          40.00           40.00           20.00       14.00   13.00
+Absolute Error      30              10              0           1       0
+Relative Error      42.86%          20.00%          0%          6.67%   0%
+
+Table: Measurements and final estimations
+
+
+Failed scenarios
+---------------------
+Sometimes the follower is not able to detect the marker anymore since it is very close to it. 
+An example is shown in  \ref{img:results}. 
+It is observed that at the final position $d=3cm$, the follower lost track of the marker. 
+
+
+![(a) Initial position $d=22.73cm$, $\rho=-33.41^\circ$ (b) Final Position \label{img:results}](img/results.jpg)
+
+
 
 
 
