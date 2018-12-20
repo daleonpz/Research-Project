@@ -49,23 +49,29 @@ Relative Error      132.47%         100%            53.22%          257.89%     
 Table: Measurements and final estimations
 
 
-Relative error values in the final position are bigger than in the initial position because the values of distance and angle are lower. However, absolute error values have improved in the case of distance, reducing from 3.48cm to 0.7cm, and keep stable in the case of angle.
+Relative error values in the final position are bigger than in the initial position because the values of distance and angle are lower. However, absolute error values have improved in the case of distance, reducing from 3.48cm to 0.7cm, and have kept stable in the case of angle.
 
 
 Difference between ultrasonic sensor and camera
 -----------------------
+Ultrasonic sensor are commonly used to measure the distance to an object. 
+We wanted to compare the accuracy of the ultrasonic ranging module HC-SC04  with PiCamera.
+In table 3.3 are presented the results of our experiments.
+The results show the chosen ultrasonic sensor is useless for distances larger than 40cm, while camera estimations have absolute errors lower than 1.52 cm. 
+In [@roverAPI] is mentioned that for distances greater than 40cm the sensor readings are not reliable.
+On the other hand, for distances smaller than 40cm both, ultrasonic readings and camera estimations, presented absolute errors lower than 0.72cm and 1cm respectively.
 
-                    1               2               3           4       5    
-------------        ------          --------        --------    -----   ------
-Distance            70              50              20          15      13
-PiCamera            71.52           51.24           20.32       15.41   13.72
-Absolute Error      1.52            1.24            0.32        0.41    0.72
-Relative Error      2.17%           2.48%           1.60%       2.73%   5.54%
-Ultrasonic          40.00           40.00           20.00       14.00   13.00
-Absolute Error      30              10              0           1       0
-Relative Error      42.86%          20.00%          0%          6.67%   0%
+                    1       2           3           4       5       6 
+------------        ------  --------    --------    -----   ------  ------ 
+Distance            70      50          20          15      13      4.8 
+PiCamera            71.52   51.24       20.32       15.41   13.72   5.48
+Absolute Error      1.52    1.24        0.32        0.41    0.72    0.68
+Relative Error      2.17%   2.48%       1.60%       2.73%   5.54%   14.17%
+Ultrasonic          40.00   40.00       20.00       14.00   13.00   5.00
+Absolute Error      30      10          0           1       0       0.2
+Relative Error      42.86%  20.00%      0%          6.67%   0%      4.17%
 
-Table: Measurements and final estimations
+Table: Accuracy comparison between ultrasonic ranging module HC-SC04 readings and PiCamera estimations.
 
 
 Failed scenarios
