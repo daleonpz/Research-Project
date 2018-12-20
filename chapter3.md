@@ -1,4 +1,4 @@
-Results  and Discussion
+Experimental Results 
 ==========================
 
 In this chapter, we evaluate the behavior of the follower in an controlled environment. 
@@ -7,12 +7,14 @@ Our experiments consisted in three steps:
     - Set a known initial and final position.
     - Turn on follower rover
     - Measure the deviation from expected final position 
-We measured the deviation using the front ultrasonic sensor, the PiCamera and a ruler, because extreme precision, less than millimeters, are not required.  
+We measured the deviation using the front ultrasonic sensor, the PiCamera and a ruler with smallest division of the scale of 1 mm, or estimated uncertainty of 0.5 mm. 
 
 Known distance and angle
 ----------------------------
 In this test case we evaluated followers accuracy to reach the desired position and orientation.
 The different setting and initial camera estimations are presented on table 3.1.
+Distance values are in centimeters (cm) and angle values are in degrees.
+For the initial position, the results show that absolute error  for both distance and angle are  less than 4cm and $3^\circ$ respectively, and that relative error are less than 5% for distance and less than 9% for angle if we ignore the relative error for $0^\circ$.
 
                     1               2               3               4               5
 ------------        ------          --------        --------        ------          ----------
@@ -28,6 +30,11 @@ Relative Error      8.1%            8.43%           1.38%           1.69%       
 
 Table: Initial settings and estimations 
 
+In table 3.2 are presented the results for the final position.
+The absolute error for distance is less than 0.7cm, and  less than $2.75^\circ$ for angle. 
+On the other hand, the relative error for distance and angle is, in the worst case, 14.17% and 257.89% respectively. 
+
+
                     1               2               3               4               5
 ------------        ------          --------        --------        ------          ----------
 Distance            4.8             4.2             8.8             5.2             5.90    
@@ -41,6 +48,8 @@ Relative Error      132.47%         100%            53.22%          257.89%     
 
 Table: Measurements and final estimations
 
+
+Relative error values in the final position are bigger than in the initial position because the values of distance and angle are lower. However, absolute error values have improved in the case of distance, reducing from 3.48cm to 0.7cm, and keep stable in the case of angle.
 
 
 Difference between ultrasonic sensor and camera

@@ -24,9 +24,6 @@ Traveled distance
 - Error due to there is no way to actually measure distance travelled 
 
 
-Building AGL...
-----------------------
-
 Switching to Raspbian due to AGL building issues
 --------------
 
