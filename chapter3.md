@@ -2,11 +2,8 @@ Experimental Results
 ==========================
 
 In this chapter, we evaluate the behavior of the follower in an controlled environment. 
-We present the results of three test cases: known distance and angle, difference between ultrasonic sensor and camera, and failed scenarios.
-Our experiments consisted in three steps:
-    - Set a known initial and final position.
-    - Turn on follower rover
-    - Measure the deviation from expected final position 
+We present the results of three test cases: known distance and angle and difference between ultrasonic sensor and camera.
+Our experiments consisted in three steps: set a known initial and final position, turn on the follower rover, measure the deviation from expected final position 
 We measured the deviation using the front ultrasonic sensor, the PiCamera and a ruler with smallest division of the scale of 1 mm, or estimated uncertainty of 0.5 mm. 
 
 Known distance and angle
@@ -72,16 +69,6 @@ Absolute Error      30      10          0           1       0       0.2
 Relative Error      42.86%  20.00%      0%          6.67%   0%      4.17%
 
 Table: Accuracy comparison between ultrasonic ranging module HC-SC04 readings and PiCamera estimations.
-
-
-Failed scenarios
----------------------
-Sometimes the follower is not able to detect the marker anymore since it is very close to it. 
-An example is shown in  \ref{img:results}. 
-It is observed that at the final position $d=3cm$, the follower lost track of the marker. 
-
-
-![(a) Initial position $d=22.73cm$, $\rho=-33.41^\circ$ (b) Final Position \label{img:results}](img/results.jpg)
 
 
 

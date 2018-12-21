@@ -26,58 +26,58 @@ The main requirements for the rover follower are listed in table 2.1.
 
 
 --------------------------------------------------------------------
-Requirement     Description  
-----------      ----------------------------------------------------
-Detect visual   The follower should detect an Aruco Marker  using
-marker          the PiCamera mounted on it. The camera field of 
-                vision should contain the marker, and this one
-                should be within 100cm of radius.   
+Requirement         Description  
+--------------      ----------------------------------------------------
+Detect visual       The follower should detect an Aruco Marker  using
+marker              the PiCamera mounted on it. The camera field of 
+                    vision should contain the marker, and this one
+                    should be within 100cm of radius.   
 
-Estimation      The follower should estimate the angle and distance 
-angle and       to the marker every time the leader moves to another 
-distance        position. 
+Estimation          The follower should estimate the angle and distance 
+angle and           to the marker every time the leader moves to another 
+distance            position. 
 
-Follower        The follower should steer based on the estimated 
-driving         values. It should first rotate based on the estimated
-                angle, and then drive forward based on the estimated
-                distance, but it should stop when is within 5cm of
-                radius from the leader. 
+Follower            The follower should steer based on the estimated 
+driving             values. It should first rotate based on the estimated
+                    angle, and then drive forward based on the estimated
+                    distance, but it should stop when is within 5cm of
+                    radius from the leader. 
 
-Leader          The leader should only move to a new position when
-movement        the follower reaches it. 
+Leader              The leader should only move to a new position when
+movement            the follower reaches it. 
 
-Autonomous      The follower should be completely autonomous. 
-driving         Detection of the marker and driving should be done
-                with no human intervention other than turning on the
-                rover and initial positioning.  
+Autonomous          The follower should be completely autonomous. 
+driving             Detection of the marker and driving should be done
+                    with no human intervention other than turning on the
+                    rover and initial positioning.  
 
-Operating       The follower should run Raspbian Jessie VX.X as 
-system          operation system. 
+Operating           The follower should run Raspbian Jessie VX.X as 
+system              operation system. 
 
-OpenCV          The follower should use OpenCV 3.4.1 [@opencv_library] for the video
-library         processing including reading video frames, marker
-                detection, and estimation of the angle and distance
-                to the marker. 
+OpenCV              The follower should use OpenCV 3.4.1 [@opencv_library] for the video
+library             processing including reading video frames, marker
+                    detection, and estimation of the angle and distance
+                    to the marker. 
 
-Rover-App       The follower code should be based on the services such
-library         as sensor reading and driving provided by the 
-                rover-app library. 
+Rover-App           The follower code should be based on the services such
+library             as sensor reading and driving provided by the 
+                    rover-app library. 
 
-Maintainability  The follower code should be maintainable following 
-                principles of modularity and encapsulation, and 
-                avoiding code duplication code. 
+Maintainability      The follower code should be maintainable following 
+                    principles of modularity and encapsulation, and 
+                    avoiding code duplication code. 
 
-Reusable        The follower code should be reusable. Subroutines
-                or functions should be well defined, and it's 
-                design should take into account orthogonality 
-                and extensibility. 
+Reusable            The follower code should be reusable. Subroutines
+                    or functions should be well defined, and it's 
+                    design should take into account orthogonality 
+                    and extensibility. 
 
-Understandability the follower code should be understandable. Comments
-                should be relevant, variable and function names
-                should be self explanatory, the code sections should
-                be well defined (includes, global/static/volatile
-                variables declarations, function definitions, 
-                main function).
+Understandability   The follower code should be understandable. Comments
+                    should be relevant, variable and function names
+                    should be self explanatory, the code sections should
+                    be well defined (includes, global/static/volatile
+                    variables declarations, function definitions, 
+                    main function).
 
 --------------------------------------------------------------------
 
