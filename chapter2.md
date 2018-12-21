@@ -81,7 +81,7 @@ Understandability   The follower code should be understandable. Comments
 
 --------------------------------------------------------------------
 
-Table: Statistics of estimated Euler angles and distance to visual marker
+Table: Most importante requirements
 
 
 Camera calibration and the pinhole model

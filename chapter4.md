@@ -2,7 +2,7 @@ Challenges and issues
 ============================
 
 In this chapter we will describe open challenges and unresolved issues that should be addresed or took into account in further versions of the described rover-app.
-We describe the following issues and challenges: extrinsic parameters estimation, limited camera vision field, detectable marker maximum rotation, error measurements in the current distance sensing system, and migration from Raspbian to AGL. 
+We describe the following issues and challenges: extrinsic parameters estimation, limited camera vision field,  marker maximum detectable rotation, error measurements in the current distance sensing system, and migration from Raspbian to AGL. 
 
 
 Estimation of extrinsic parameters
@@ -27,25 +27,33 @@ In addition, The limits are not the same because the PiCamera is not perfectly a
 ![Limits of camera vision field \label{img:circularshape}](img/circularshape.jpg)
 
 
-Maximum rotation
+Maximum detectable rotations
 ------------------
 There is a maximun $\rho$ angle in clockwise and counterclockwise directions that can be detected.
-In figure "rotations" is shown the position and angle of the roverleader so the marker can be still detectable. 
-For counterclockwise rotations the maximum angle is $\rho = -77$ degrees and for clockwise rotations is $\rho = 72$ degrees. 
+In figure \ref{img:maximumrrotations} is shown the position and angle in which the marker can still be detectable. 
+For counterclockwise rotations the maximum $\rho$ angle is $-77$ degrees and for clockwise rotations is $72$ degrees. 
 
-Traveled distance
+
+![Maximum detectable rotations (a) counterclockwise, (b) no rotation and (c) clockwise \label{img:maximumrrotations}](img/maximumrotation.jpg)
+
+Problems measuring distance traveled
 -----------------------
-45 deg the ultrasonic sensors fails
-- Error due to there is no way to actually measure distance travelled 
+There are no sensor mounted on the Rover that measures  accurately  of the distance traveled such as GPS or encoders. 
+We are using ultrasonic sensor to measure the distance to the marker, however this approach only works when the rover leader in within 40cm radius and its orientation is not greater than 30 degrees given the way that sensors works. For angles greater than 30 degrees the bounced waved is not detectable. 
+Due to the previous explained reasons and the fact it is know the estimated distance to the marker, the use of a sensor to measure distance travelled is needed, and also it will broad the range of possible applications.  
 
-Sometimes the follower is not able to detect the marker anymore since it is very close to it. 
-An example is shown in  \ref{img:results}. 
+
+In addition, sometimes the follower is not able to detect the marker anymore since it is very close to it due to our system does not measure accurately the distance travelled. An example is shown in  \ref{img:results}. 
 It is observed that at the final position $d=3cm$, the follower lost track of the marker. 
 
 
 ![(a) Initial position $d=22.73cm$, $\rho=-33.41^\circ$ (b) Final Position \label{img:results}](img/results.jpg)
 
 
-Switching to Raspbian due to AGL building issues
+Switching to Raspbian to AGL
 --------------
+The rover-app described in this document runs on top of the Raspbian operation system.
+In further improvements the application should run on AGL. 
+However, the current version of the Eclipse Kuksa software development kit (SDK) is not compatible with `OpenCV 3.4.1`, thus this issue should be addressed first. 
+
 

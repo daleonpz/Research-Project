@@ -7,7 +7,7 @@ UNIVERSITY = Fachhochschule Dortmund
 RESEARCH_GROUP = Institut für die Digitalisierung von Arbeits- und Lebens­welten (IDiAL)  
 THESIS_TYPE = Research Project
 DOCUMENT_LANG = english
-SOURCE_FILES = abstract.md chapter1.md chapter2.md chapter3.md chapter4.md chapter5.md summary.md  bibliography.md
+SOURCE_FILES = abstract.md chapter1.md chapter2.md chapter3.md chapter4.md chapter5.md bibliography.md
 APPENDIX_FILE = appendix.md
 
 # variables for the PDF/HTML compiler
