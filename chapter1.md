@@ -1,9 +1,8 @@
 Introduction
 =========
+Today automotive software-intensive systems are developed in silos by each car manufacturer or original equipment manufacturer (OEM) in-house [@Apsstacle2016] and this approach is not suitable for long-term challenges in the industry.
+For example, big data simulations and virtual modeling can lower development costs and speed up time to market, embedded data sensors should enable more precise monitoring of the performance of vehicles and components [@mckinseyRoadmap], and the car should be connected not only to monitor working parts and safety conditions around it, but  also to communicate with other vehicles and with an increasingly intelligent roadway infrastructure [@mckinseyConnectedcar]. 
 
-The introductory part contains the analysis of the diploma dissertation, its historical history, the justification of the task (description of the motivation), the solutions so far and the summary of the student's solution.
-
-According to the introductory custom, it is closed with the structure of the diploma, that is, with a brief description of which chapter it deals with.
 
 
 APPSTACLE
@@ -20,7 +19,7 @@ The Eclipse Kuksa ecosystem consists of an in-vehicle platform, a cloud platform
 ![Eclipse Kuksa Ecosystem [@EKuksa] \label{img:ekuksa}](img/EKuksa.png)
 
 
-It is possible to collect, store and analyze data through the different kuksa layers of the in-vehicle platform.
+It is possible to collect, store and analyze data through the different Kuksa layers of the in-vehicle platform.
 These layers are: _meta-kuksa_ adds the kuksa in-vehicle applications into the AGL image, _meta-kuksa-dev_ contains all extra packages that are useful for the development process but aren’t required in the production Image,  and _meta-rover_  holds all the needed packages to enable the development for the Rover [@EKuksa]. 
 The in-vehicle platform runs on top of _Automotive Grade Linux_ or AGL which is an open-source project from The Linux Foundation. The goal of AGL is to develop a GNU/Linux based operating system and a framework for automotive applications [@AGL].
 
@@ -74,8 +73,17 @@ types:
 
 Rover Application
 -------------------
+It is possible to develop applications in Eclipse Kuksa based on rover services, these applications are called rover-apps. 
+The development of rover-apps can be done locally on the user's laptop or desktop or on _Eclipse Che_. 
+In this research project, we developed a rover-app for following without human intervention a visual marker on another Rover. 
+Our application is based on `OpenCV` libraries, and camera, driving and sensor services.
+In addition, the development of our application was done locally because `OpenCV` is not integrated on the AGL software development kit embedded in Eclipse Che toolchain.  
 
-Related Work
--------------
+
+Finally, let us explain the organization of this research project. In chapter 2 we present  design and implementation of our rover-app with some theoretical background. 
+In chapter 3 experimental results are given. 
+In chapter 4 we describe challenges and issues that should be addressed in further versions.
+At the of the document we summarize the conclusions.
+
 
 
