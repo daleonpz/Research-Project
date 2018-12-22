@@ -1,4 +1,4 @@
-Conclusions
+Conclusions {.unnumbered}
 ============
 
 The design and development of a rover-app has been presented.

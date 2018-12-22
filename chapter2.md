@@ -51,7 +51,7 @@ driving             Detection of the marker and driving should be done
                     with no human intervention other than turning on the
                     rover and initial positioning.  
 
-Operating           The follower should run Raspbian Jessie VX.X as 
+Operating           The follower should run Raspbian Jessie  as 
 system              operation system. 
 
 OpenCV              The follower should use OpenCV 3.4.1 [@opencv_library] for the video
