@@ -6,18 +6,17 @@ header-includes:
 Design and Implementation {#implementation}
 ===========================================
 
-Use case description
-------------------------------------
-In this research project we develop a  use case for rover-apps. 
-For the use case we are using two _Rovers_, a **Rover Leader** and a **Rover Follower**. 
+In this research project we develop an example rover-app. 
+For the use case of our application  we are using two _Rovers_, a **Rover Leader**, and a **Rover Follower** running our rover-app. 
 Hereinafter, we will only use **Leader** or **Follower** to refer to them. 
-The leader has a visual marker, the follower should detect it, estimate the angle $\beta$ and distance $d$ with respect to the leader as is shown in figure \ref{img:roverusecase}, and follow the leader. 
+The leader has a visual marker, the follower should detect it, estimate the angle $\beta$ and distance $d$ with respect to the leader as is shown in figure \ref{img:roverusecase}, and follow the leader without any human intervention. 
 
 ![Rover Use Case \label{img:roverusecase}](img/roverusecase.jpg)
 
 
-This chapter will be focused on the development of the behavior of the follower because is the only rover that must be completely autonomous. 
-The  following sections will describe requirements, main hardware parts involved and software tools required to implement follower's behavior, camera calibration and pose estimation theory, and software implementation details. 
+This chapter will be focused on the design and development of our rover-app. 
+In addition, we present the theoretical background required to understand design decisions.
+The  following sections will describe the main requirements; camera calibration, pinhole model and pose estimation theory; and implementation details. 
 
 
 Requirements
@@ -89,7 +88,7 @@ Camera calibration and the pinhole model
 Camera calibration is a necessary step in 3D computer vision in order to extract metric information from 2D images [@Zhang2004]. 
 If you hold that box in front of you in a dimly lit room, with the pinhole facing some light source  you see an inverted image appearing on the translucent plat [@Forsyth2002]. 
 In figure \ref{img:pinholemodel}, a 3D object (pyramid) is projected first on a scene plane, and then on the image plane. 
-Each point in the scene plane or _world frame_  will have it's correspondence in the image plane or _camera frame_. 
+Each point in the scene plane or _world frame_  have it's correspondence in the image plane or _camera frame_. 
 The distance from the pinhole to the image plane is called focal length.  
 
 
@@ -120,14 +119,13 @@ The coordinates of the principal point is described by  $(x_0, y_0)$, $\alpha_{x
 \end{equation}
 
 
-The camera extrinsic parameters are given by the rotation matrix $\mathbf{R}$ and translation vector $\mathbf{t}$. which are used to project an image on the world frame to camera frame.
-There is also a scale transformation, but it's already given by $\alpha_{x}$ and $\alpha_{y}$.
+The camera extrinsic parameters are given by the rotation matrix $\mathbf{R}$ and translation vector $\mathbf{t}$ which are used to project an image on the world frame to camera frame.
+Moreover, the scale transformation is given by $\alpha_{x}$ and $\alpha_{y}$.
 
-Current cameras are equipped with lenses that produce some distortions on the images, however, the pinhole model is still a good approximation for our case since we are using a **PiCamera** which has minimal distortions. 
 
-The camera calibration has been done with using `OpenCV`. 
+The camera calibration is performed using `OpenCV`. 
 This library implementation is based on the technique described by [@Zhang2000] and the matlab implementation done by [@Bouguet2010]. 
-The calibration technique in [@Zhang2000] requires the camera to observed a planar pattern, usually a chessboard pattern, at different orientations, the more the better the estimation of the intrinsic parameters. 
+The calibration technique in [@Zhang2000] requires the camera to observe a planar pattern, usually a chessboard pattern, at different orientations, the more samples the better the estimation of the intrinsic parameters. 
 The calibration algorithm minimize the reprojection error which is the distance between observed feature points on the planer pattern and the projected using the estimates parameters. 
  
 For calibration we used a _ChArUco_ board instead of the classical chessboard because it generates a better estimation of the parameters [@opencv_library]. 
@@ -136,7 +134,7 @@ For calibration we used a _ChArUco_ board instead of the classical chessboard be
 
 
 The procedure to calibrate the PiCamera is straightforward with `OpenCV` and the sample codes found under `opencv_contrib-3.4.1/modules/aruco/samples`. 
-**A detailed explanation can be found in the Appendix (not sure but is a remainder)**. 
+The following list is necessary to perform a calibration process:
 
 1. Create a charuco board, print it and paste it on a solid and planar surface.
 2. Compile the example code `calibrate_camera_charuco.cpp` and run it
@@ -172,7 +170,7 @@ A more detailed description should be added in the appendix
 
 Extrinsic Parameters
 --------------------------
-As it was mention before, the camera extrinsic parameters are given by the rotation matrix $\mathbf{R}$ and translation vector $\mathbf{t}$. 
+As mentioned before, the camera extrinsic parameters are given by the rotation matrix $\mathbf{R}$ and translation vector $\mathbf{t}$. 
 A rotation matrix can be formed as the product of three rotations around three cardinal axes, e.g., $x$, $y$, and $z$, or $x$, $y$, and $x$. This is generally a bad idea, as the result depends on the order in which the transforms applies [@Szeliski2010].
 
 However, a rotation can be also represented by a rotation axis $\mathbf{k} = \lbrack k_{x},k_{y},k_{z} \rbrack ^{T}$ and an angle $\theta$, or equivalently by a vector $\mathbf{\omega} = \theta\mathbf{k}$. 
@@ -236,7 +234,7 @@ R_{z}(\phi )  =
 \end{equation}
 
 
-Given the given sequence of rotations and the algorithm described by [@Slabaugh1999], the angles can be found using  algorithm 1.
+Following the sequence of rotations presented above and the algorithm described by [@Slabaugh1999], the angles can be found using  algorithm 1.
 
 \begin{figure}[ht]
  \centering
@@ -260,7 +258,7 @@ Given the given sequence of rotations and the algorithm described by [@Slabaugh1
 \end{figure}
 
 
-Use case implementation details
+Implementation details
 -------------------------------
 As it was mentioned before, the follower should be completely autonomous. 
 In order to do so, the follower will need to read data from sensors, process that data and generate movement based on the processed data. 
