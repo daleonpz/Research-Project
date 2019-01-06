@@ -6,72 +6,72 @@ header-includes:
 Design and Implementation {#implementation}
 ===========================================
 
-In this research project we develop an example rover-app. 
+In this research project we develop an example of a  rover-app. 
 For the use case of our application  we are using two _Rovers_, a **Rover Leader**, and a **Rover Follower** running our rover-app. 
 Hereinafter, we will only use **Leader** or **Follower** to refer to them. 
-The leader has a visual marker, the follower should detect it, estimate the angle $\beta$ and distance $d$ with respect to the leader as is shown in figure \ref{img:roverusecase}, and follow the leader without any human intervention. 
-
+The Leader has a visual marker, the Follower should detect it, estimate the angle $\beta$ and distance $d$ with respect to the Leader as is shown in figure \ref{img:roverusecase}, and follow the Leader without any human intervention.  
 ![Rover Use Case \label{img:roverusecase}](img/roverusecase.jpg)
 
 
-This chapter will be focused on the design and development of our rover-app. 
+This chapter will focus on the design and development of our rover-app. 
 In addition, we present the theoretical background required to understand design decisions.
-The  following sections will describe the main requirements; camera calibration, pinhole model and pose estimation theory; and implementation details. 
+The  following sections will describe the main requirements, camera calibration, pinhole model and pose estimation theory, and implementation details. 
 
 
 Requirements
 -------------------
-The main requirements for the rover follower are listed in table 2.1. 
+The main requirements for the rover Follower are listed in table 2.1. 
 
 
 --------------------------------------------------------------------
 Requirement         Description  
 --------------      ----------------------------------------------------
-Detect visual       The follower should detect an Aruco Marker  using
+Detect visual       The Follower should detect an Aruco Marker  using
 marker              the PiCamera mounted on it. The camera field of 
-                    vision should contain the marker, and this one
-                    should be within 100cm of radius.   
+                    vision should contain the marker, and the marker
+                    should be at a maximum distance of 100cm from the
+                    PiCamera.   
 
-Estimation          The follower should estimate the angle and distance 
-angle and           to the marker every time the leader moves to another 
+Estimation          The Follower should estimate the angle and distance 
+angle and           to the marker every time the Leader moves to another 
 distance            position. 
 
-Follower            The follower should steer based on the estimated 
+Follower            The Follower should steer based on the estimated 
 driving             values. It should first rotate based on the estimated
                     angle, and then drive forward based on the estimated
-                    distance, but it should stop when is within 5cm of
-                    radius from the leader. 
+                    distance, but it should stop when it is within 5cm of
+                    radius from the Leader. 
 
-Leader              The leader should only move to a new position when
-movement            the follower reaches it. 
+Leader              The Leader should only move to a new position when
+movement            the Follower reaches it. 
 
-Autonomous          The follower should be completely autonomous. 
+Autonomous          The Follower should be completely autonomous. 
 driving             Detection of the marker and driving should be done
-                    with no human intervention other than turning on the
-                    rover and initial positioning.  
+                    with no human intervention other than turning the
+                    rover on and initial positioning.  
 
-Operating           The follower should run Raspbian Jessie  as 
+Operating           The Follower should run Raspbian Jessie  as 
 system              operation system. 
 
-OpenCV              The follower should use OpenCV 3.4.1 [@opencv_library] for the video
+OpenCV              The Follower should use OpenCV 3.4.1 [@opencv_library] for the video
 library             processing including reading video frames, marker
                     detection, and estimation of the angle and distance
                     to the marker. 
 
-Rover-App           The follower code should be based on the services such
+Rover-App           The Follower's code should be based on the services such
 library             as sensor reading and driving provided by the 
                     rover-app library. 
 
-Maintainability      The follower code should be maintainable following 
+Maintainability      The Follower's code should be maintainable following 
                     principles of modularity and encapsulation, and 
                     avoiding code duplication code. 
 
-Reusable            The follower code should be reusable. Subroutines
-                    or functions should be well defined, and it's 
+Reusable            The Follower's code should be reusable. Subroutines
+                    or functions should be well defined, and its 
                     design should take into account orthogonality 
                     and extensibility. 
 
-Understandability   The follower code should be understandable. Comments
+Understandability   The Follower's code should be understandable. Comments
                     should be relevant, variable and function names
                     should be self explanatory, the code sections should
                     be well defined (includes, global/static/volatile
@@ -88,7 +88,7 @@ Camera calibration and the pinhole model
 Camera calibration is a necessary step in 3D computer vision in order to extract metric information from 2D images [@Zhang2004]. 
 If you hold that box in front of you in a dimly lit room, with the pinhole facing some light source  you see an inverted image appearing on the translucent plat [@Forsyth2002]. 
 In figure \ref{img:pinholemodel}, a 3D object (pyramid) is projected first on a scene plane, and then on the image plane. 
-Each point in the scene plane or _world frame_  have it's correspondence in the image plane or _camera frame_. 
+Each point in the scene plane or _world frame_  has its correspondence in the image plane or _camera frame_. 
 The distance from the pinhole to the image plane is called focal length.  
 
 
@@ -107,7 +107,7 @@ Let's denote a 2D point $\mathbf{\hat{m}} = [x,y,1]^{T}$,  a 3D point $\mathbf{\
 \end{equation}
 
 The camera intrinsic matrix $\mathbf{A}$ contains information about the internal parameters of the camera: focal length, image sensor format and principal point or image center. 
-The coordinates of the principal point is described by  $(x_0, y_0)$, $\alpha_{x}$ and $\alpha_{y}$ represent the focal length in terms of pixels on the axis $x$ and $y$, and $\gamma$ is the skew of image.
+The coordinates of the principal point is described by  $(x_0, y_0)$, $\alpha_{x}$ and $\alpha_{y}$ represent the focal length in terms of pixels on the axis $x$ and $y$, and $\gamma$ is the skew of the image.
 
 
 \begin{equation}
@@ -125,16 +125,16 @@ Moreover, the scale transformation is given by $\alpha_{x}$ and $\alpha_{y}$.
 
 The camera calibration is performed using `OpenCV`. 
 This library implementation is based on the technique described by [@Zhang2000] and the matlab implementation done by [@Bouguet2010]. 
-The calibration technique in [@Zhang2000] requires the camera to observe a planar pattern, usually a chessboard pattern, at different orientations, the more samples the better the estimation of the intrinsic parameters. 
-The calibration algorithm minimize the reprojection error which is the distance between observed feature points on the planer pattern and the projected using the estimates parameters. 
+The calibration technique in [@Zhang2000] requires the camera to observe a planar pattern, usually a chessboard pattern, at different orientations. The more samples, the better the estimation of the intrinsic parameters. 
+The calibration algorithm minimizes the reprojection error, which is the distance between observed feature points on the planer pattern and the projected using the estimated parameters. 
  
-For calibration we used a _ChArUco_ board instead of the classical chessboard because it generates a better estimation of the parameters [@opencv_library]. 
+For calibration, we used a _ChArUco_ board instead of the classical chessboard because it generates a better estimation of the parameters [@opencv_library]. 
 
 ![Planar Patterns [@opencv_library] \label{img:pattern}](img/pattern.png)
 
 
 The procedure to calibrate the PiCamera is straightforward with `OpenCV` and the sample codes found under `opencv_contrib-3.4.1/modules/aruco/samples`. 
-The following list is necessary to perform a calibration process:
+The following list is necessary in order to perform a calibration process:
 
 1. Create a charuco board, print it and paste it on a solid and planar surface.
 2. Compile the example code `calibrate_camera_charuco.cpp` and run it
@@ -260,10 +260,10 @@ Following the sequence of rotations presented above and the algorithm described 
 
 Implementation details
 -------------------------------
-As it was mentioned before, the follower should be completely autonomous. 
-In order to do so, the follower will need to read data from sensors, process that data and generate movement based on the processed data. 
+As it was mentioned before, the Follower should be completely autonomous. 
+In order to do so, the Follower will need to read data from sensors, process that data and generate movement based on the processed data. 
 
-In figure \ref{img:roverusecase} is shown a diagram of our use case. 
+Figure \ref{img:roverusecase} shows a diagram of our use case. 
 The main sensor is a PiCamera, the processing part performs the marker detection on the captured frames and the calculation of the Euler angles and distance based on the equations described in the last section, and finally  the movement is generated using the driving rover services.
 
 &nbsp;
@@ -314,7 +314,7 @@ cv::aruco::estimatePoseSingleMarkers( corners, 0.07,
 
 
 The next step is calculating the Euler angles by using function `cv::Rodrigues`  and  Slabaugh's algorithm. 
-The `cv:Rodrigues` function is a direct implementation of equations \ref{eq:crossproductmatrix} and \ref{eq:rodrigues}. 
+The `cv:Rodrigues` function is a direct implementation of equations 2.4 and 2.5. 
 
 &nbsp;
 
@@ -329,7 +329,7 @@ rotationMatrixToEulerAngles(rmat, angle)
 
 &nbsp;
 
-An example is  shown in figure  \ref{img:cameraaxis}, the Euler angles are $\psi = 165$, $\rho = 25$ and $\psi = 0$. The green, red and blue axes correspond to the X-axis, Y-axis and Z-axis respectively.
+An example is  shown in figure  \ref{img:cameraaxis}. The Euler angles are $\psi = 165$, $\rho = 25$ and $\psi = 0$. The green, red and blue axes correspond to the X-axis, Y-axis and Z-axis respectively.
 As expected from the pin hole model, $\psi$ is near 180 because the image is facing the camera as result the blue axis points towards the camera.
 
 ![Camera axis \label{img:cameraaxis}](img/camera_axis.png)
@@ -370,7 +370,7 @@ rotationMatrixToEulerAngles(rmat, angles);
 
 
 However, the estimated angles can not be used directly because estimations have small errors.
-In figure \ref{img:axisplot} can be observed the values of the rotation angles in a span of 1000 samples and in table 2.1 the statistics of those samples.
+Figure \ref{img:axisplot} shows the values values of the rotation angles in a span of 1000 samples and in table 2.1 shows the statistics of those samples.
 The ground truth values for Euler angles were $\lbrack 0, 0, 0\rbrack$, and for distance were 47.5 and 16  centimeters respectively. 
 
 Data          Mean        $\sigma$    Median  
@@ -390,8 +390,8 @@ Table: Statistics of estimated Euler angles and distance to visual marker
 ![Angles in X-axis $\psi$, Y-axis $\rho$ and Z-axis $\phi$ \label{img:axisplot}](img/axis_plot.png)
 
 
-The results of standard deviation $\sigma$  from table 2.2 suggest the estimated values can be stable ($\sigma < 0.16$ deg) overall, particularly in the case of distance to the marker ($\sigma < 0.04cm$)
-However, figure \ref{img:axisplot} suggests the existence of pike values, thus we must filter the samples in order to minimize the effect of those outliers. 
+The results of the standard deviation $\sigma$  from table 2.2 suggest the estimated values can be stable ($\sigma < 0.16$ deg) overall, particularly in the case of distance to the marker ($\sigma < 0.04cm$).
+However, figure \ref{img:axisplot} suggests the existence of pike values, thus we must filter the samples in order to minimize the effect of those outliers.   
 A median filter is highly effective removing outliers from data, but requires to save chunks of data in memory, but because the results showed that the mean and the median of Euler angles are similar, thus it is reasonable to think that outliers has small influence on the data.
 In other words, the mean filter is a simple and effective option against outliers problem. Its implementation is straightforward and requires no memory to save previous values. 
 A pseudocode is as follows:
@@ -409,10 +409,10 @@ estAngle /= samples;
 
 
 **Rover rotations**   
-Rover is a  ground vehicle which means that only steer in one axis. 
-Thus, only rotations in Y-Axis are possible. 
-As shown in figure \ref{img:roverrotations} rotations in X-axis are not possible since the rover can not fly or go underground.  The same applies to rotations in Z-axis.
-In other words, the only relevant information from the estimated Euler angles is $\rho$, or the angle related the Y-axis.
+Rover is a  ground vehicle which means that it only steers in one axis. 
+Thus, only rotations in the Y-Axis are possible. 
+As shown in figure \ref{img:roverrotations}, rotations in the X-axis are not possible since the rover cannot fly or go underground.  The same applies to rotations in the Z-axis.
+In other words, the only relevant information from the estimated Euler angles is $\rho$, or the angle related to the Y-axis.
 
 ![Rotation rotations (a) Rotation in X-axis (b) Rotation in Y-axis  \label{img:roverrotations}](img/roverrotation.jpg)
 
@@ -421,17 +421,17 @@ In other words, the only relevant information from the estimated Euler angles is
 
 
 **Measuring angular displacement**  
-In order to move the follower to a defined angular position, the CY-521 board is used.
+In order to move the Follower to a defined angular position, the CY-521 board is used.
 The CY-521 has an accelerometer and a gyroscope.
 The accelerometer works by measuring the components of gravity in the different axis, taking the "earth" or gravity acceleration as reference.
-On the other hand, the gyroscope measures angular speed relative to itself or own rotation, using the inertial force called the Coriolis effect.
+On the other hand, the gyroscope measures angular speed relative to itself or its own rotation, using the inertial force called the Coriolis effect.
 
-With that information we could estimate the angular position of follower.
-However, the values from the accelerometer are not taking into account because the gravity vector is parallel to the Y-axis.
+With that information, we could estimate the angular position of Follower.
+However, the values from the accelerometer are not taken into account because the gravity vector is parallel to the Y-axis.
 It is important to note that we want to measure relative rotations, thus in the initial position the angle will always be $0$.
 
 
-The gyroscope measures angular speed in all axis, in particular the angular speed in  Y-axis or  $\omega_{y}$.
+The gyroscope measures angular speed in all axes, in particular the angular speed in  the Y-axis or  $\omega_{y}$.
 The angular displacement $\rho$ is just the integral of $\omega_{y}$. 
 
 \begin{equation}
@@ -478,7 +478,7 @@ stop();
 
 **Camera Projection and rover driving**  
 As mentioned at the beginning of this chapter, in the pin hole camera model the 2D point $\mathbf{\hat{m}}$ and the 3D $\mathbf{\hat{M}}$ are related through a projection matrix $\mathbf{P}$, and the camera projection matrix $\mathbf{P}$ is formed by the combination of extrinsic and intrinsic camera parameters. 
-In order to move the follower to the leader position, we must find $\mathbf{\hat{M}}$ given $\mathbf{\hat{m}}$.
+In order to move the Follower to the Leader's  position, we must find $\mathbf{\hat{M}}$ given $\mathbf{\hat{m}}$.
 
 
 \begin{equation}
@@ -508,8 +508,8 @@ Since rotation matrix is orthogonal:
  \mathbf{R}^{T}( m_{2D} -  \mathbf{t})  =\mathbf{\hat{M}} 
 \end{equation}
 
-Thus, the rover follower first should drive forward and then rotate in order to reach to leader position. 
-On the other hand, since the follower only rotates in Y-axis we only need to change the direction of the rotation and translation.
+Thus, the rover Follower first should drive forward and then rotate in order to reach to Leader's position. 
+On the other hand, since the Follower only rotates in the Y-axis, we only need to change the direction of the rotation and translation.
 
 
 \begin{equation}
@@ -552,15 +552,15 @@ RoverHCSR04 r_rear  = RoverHCSR04(ROVER_REAR);
 ![Activity diagram \label{img:activitydiagram}](img/activitydiagram.png)
 
 
-After the initial set up, a infinity loop starts.
-During the loop we estimate the angle $\rho$ and distance $d$, the later is the norm of the translation vector $d = \left\lVert \mathbf{t} \right\rVert_{2}$.
+After the initial set up, an infinity loop starts.
+During the loop, we estimate the angle $\rho$ and distance $d$, the latter is the norm of the translation vector $d = \left\lVert \mathbf{t} \right\rVert_{2}$.
 The motion is done in two steps: rotation and translation. 
-The follower goes forward $d$ centimeters, and  when it is done, it rotates $\rho$ degrees. 
+The Follower goes forward $d$ centimeters, and  when it is done, it rotates $\rho$ degrees. 
 The current distance is measured using the front ultrasonic ranging module HC-SC04.
-The rover-API can only give accurate information for distances lower than 40 cm [@roverAPI], for distances greater than 40cm the API returns always 40cm.
-However, when the follower approaches the leader eventually will be in the measurable range. 
+The rover-API can only give accurate information for distances below  40 cm [@roverAPI], for distances greater than 40cm the API always returns 40cm.
+However, when the Follower approaches the Leader, it will  eventually  be in the measurable range. 
 
-Once the follower reaches the leader, it stops and wait until the leader moves again.
+Once the Follower reaches the Leader, it stops and waits until the Leader moves again.
 A pseudocode of the loop is as follows:
 
 &nbsp;

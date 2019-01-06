@@ -2,7 +2,7 @@ Abstract {.unnumbered}
 ========
 
 The purpose of this research project is to develop an application for Rover in-vehicle platform in the context of APPSTACLE project and Eclipse Kuksa ecosystem. 
-The application allows a Rover to follow without human intervention a visual marker on another Rover. 
+The application allows a Rover to follow a visual marker on another Rover without human intervention. 
 `OpenCV` libraries and Eclipse Kuksa services are the main building blocks of the application.  
 
 
