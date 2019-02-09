@@ -101,6 +101,7 @@ Let's denote a 2D point $\mathbf{\hat{m}} = [x,y,1]^{T}$,  a 3D point $\mathbf{\
 \end{equation}
 
 The camera intrinsic matrix $\mathbf{A}$ contains information about the internal parameters of the camera: focal length, image sensor format and principal point or image center. 
+This matrix is the output of the calibration process. 
 The coordinates of the principal point is described by  $(x_0, y_0)$, $\alpha_{x}$ and $\alpha_{y}$ represent the focal length in terms of pixels on the axis $x$ and $y$, and $\gamma$ is the skew of the image.
 
 
@@ -113,8 +114,9 @@ The coordinates of the principal point is described by  $(x_0, y_0)$, $\alpha_{x
 \end{equation}
 
 
-The camera extrinsic matrix are given by the rotation matrix $\mathbf{R}$ and translation vector $\mathbf{t}$ which are used to project an image on the world frame to camera frame.
+The camera extrinsic matrix are given by the rotation matrix $\mathbf{R}$ and translation vector $\mathbf{t}$ which are used to project an image on the world frame to camera frame. 
 Moreover, the scale transformation is given by $\alpha_{x}$ and $\alpha_{y}$.
+In the following section we will describe how to extract relevant information such as the rotation angles. 
 
 
 The camera calibration is performed using `OpenCV`. 
@@ -162,8 +164,8 @@ In our case, the camera intrinsic matrix $\mathbf{A}$ is as following:
 A more detailed description should be added in the appendix
 -->
 
-Extrinsic Parameters
---------------------------
+Rotation matrix to Euler angles
+------------------------------------
 As mentioned before, the camera extrinsic parameters are given by the rotation matrix $\mathbf{R}$ and translation vector $\mathbf{t}$. 
 A rotation matrix can be formed as the product of three rotations around three cardinal axes, e.g., $x$, $y$, and $z$, or $x$, $y$, and $x$. This is generally a bad idea, as the result depends on the order in which the transforms applies [@Szeliski2010].
 
@@ -191,9 +193,6 @@ k_{z}   & 0         & -k_{x} \\
 Should I add the mathematical formulation for rodrigues formula? or just put it on the appendix
 -->
 
-
-Rotation matrix to Euler angles
-------------------------------------
 
 In order to get the angles related a rotation whose yaw, pitch and roll angles are $\phi$, $\rho$ and $\psi$. These angles are rotations in $z$, $y$ and $x$ axis respectively.
 We will rotate first about the $x$-axis, then the $y$-axis, and finally the $z$-axis.  Such a sequence of rotations can be represented as the matrix product
@@ -255,18 +254,16 @@ Following the sequence of rotations presented above and the algorithm described 
 Implementation details
 -------------------------------
 As it was mentioned before, the Follower should be completely autonomous. 
-In order to do so, the Follower will need to read data from sensors, process that data and generate movement based on the processed data. 
+In order to do so, the Follower captures video frames, processes the frames with `OpenCV` a and generate movement based on the processed data. 
 
-Figure \ref{img:roverusecase} shows a diagram of our use case. 
-The main sensor is a PiCamera, the processing part performs the marker detection on the captured frames and the calculation of the Euler angles and distance based on the equations described in the last section, and finally  the movement is generated using the driving rover services.
 
 &nbsp;
 
 
 **Video Processing with OpenCV**  
-Just like in the case of camera calibration, we use `OpenCV` and the submodule `aruco`  to capture video and process the frames in order to extract information from the visual markers.
+We use `OpenCV` and the submodule `aruco`  to capture video and process the frames in order to extract information from the visual markers.
 To estimate and detect the marker at the beginning  we should load the camera intrinsic parameters, saved in a YAML file,  and the Aruco dictionary, composed by 250 markers and a marker size of 6x6 bits [@opencv_library],  to memory.
-
+These steps are shown in following code. 
 
 &nbsp;
 
@@ -284,11 +281,13 @@ cv::Ptr<cv::aruco::Dictionary> dictionary =
 
 
 Given a video frame, it is possible to detect Aruco markers if they are visible.
-When the marker is detected, we extract the four corners  of the marker using `cv::aruco::detectMarkers` function.
+When the marker is detected, we extract the four corners  of the 7cm width marker using `cv::aruco::detectMarkers` function.
 The first corner is the top left corner, followed by the top right, bottom right and bottom left. 
 The next step is to estimate the extrinsic camera parameters, which means the rotation vector $\omega$ and the translation vector $\mathbf{t}$. 
-The size of the marker is an input parameter of the `OpenCV` function `cv::aruco::estimatePoseSingleMarkers`. In our case the marker size is 7cm. 
-
+The size of the marker is an input parameter of the `OpenCV` function `cv::aruco::estimatePoseSingleMarkers`. 
+Finally, we calculate the Euler angles by using function `cv::Rodrigues`  and  Slabaugh's algorithm, described in the previous section. 
+The `cv:Rodrigues` function is a direct implementation of equations 2.4 and 2.5. 
+The code below shows how to used the mentioned functions.
 
 
 &nbsp;
@@ -299,37 +298,19 @@ The size of the marker is an input parameter of the `OpenCV` function `cv::aruco
 // corners: detected corners
 // rvec: rotation vector
 // tvec: translation vector
+// rmat: rotation matrix
+// angle: Euler angles
 cv::aruco::detectMarkers(image, dictionary, corners, ids);
 cv::aruco::estimatePoseSingleMarkers( corners, 0.07, 
                                 cameraMatrix, 0, rvec, tvec);
-```
-
-&nbsp;
-
-
-The next step is calculating the Euler angles by using function `cv::Rodrigues`  and  Slabaugh's algorithm. 
-The `cv:Rodrigues` function is a direct implementation of equations 2.4 and 2.5. 
-
-&nbsp;
-
-
-```c++
-// rmat: rotation matrix
-// angle: Euler angles
-cv::Rodrigues(rvec.row, rmat);
+cv::Rodrigues(rvec, rmat);
 rotationMatrixToEulerAngles(rmat, angle)
 ```
 
 
 &nbsp;
 
-An example is  shown in figure  \ref{img:cameraaxis}. The Euler angles are $\psi = 165$, $\rho = 25$ and $\psi = 0$. The green, red and blue axes correspond to the X-axis, Y-axis and Z-axis respectively.
-As expected from the pin hole model, $\psi$ is near 180 because the image is facing the camera as result the blue axis points towards the camera.
-
-![Camera axis \label{img:cameraaxis}](img/camera_axis.png)
-
-
-A basic code for video processing the marker  is as follows:
+A basic code for extracting the features from the marker  is as follows:
 
 &nbsp;
 
@@ -362,9 +343,15 @@ rotationMatrixToEulerAngles(rmat, angles);
 
 
 
+An example is  shown in figure  \ref{img:cameraaxis}. The Euler angles are $\psi = 165$, $\rho = 25$ and $\psi = 0$. The green, red and blue axes correspond to the X-axis, Y-axis and Z-axis respectively.
+As expected from the pin hole model, $\psi$ is near 180 because the image is facing the camera as result the blue axis points towards the camera.
+
+![Camera axis \label{img:cameraaxis}](img/camera_axis.png)
+
+
 
 However, the estimated angles can not be used directly because estimations have small errors.
-Figure \ref{img:axisplot} shows the values values of the rotation angles in a span of 1000 samples and in table 2.1 shows the statistics of those samples.
+Figure \ref{img:axisplot} shows the values values of the rotation angles in a span of 1000 samples and in Table 2.1 shows the statistics of those samples.
 The ground truth values for Euler angles were $\lbrack 0, 0, 0\rbrack$, and for distance were 47.5 and 16  centimeters respectively. 
 
 Data          Mean        $\sigma$    Median  
@@ -385,27 +372,16 @@ Table: Statistics of estimated Euler angles and distance to visual marker
 
 
 The results of the standard deviation $\sigma$  from table 2.2 suggest the estimated values can be stable ($\sigma < 0.16$ deg) overall, particularly in the case of distance to the marker ($\sigma < 0.04cm$).
-However, figure \ref{img:axisplot} suggests the existence of pike values, thus we must filter the samples in order to minimize the effect of those outliers.   
-A median filter is highly effective removing outliers from data, but requires to save chunks of data in memory, but because the results showed that the mean and the median of Euler angles are similar, thus it is reasonable to think that outliers has small influence on the data.
+However, figure \ref{img:axisplot} suggests the existence of peak values, thus we must filter the samples in order to minimize the effect of those outliers.   
+A median filter is highly effective removing outliers from data, but requires to save chunks of data in memory. However, the results showed that the mean and the median of Euler angles are similar, thus it is reasonable to think that outliers have small influence on the data.
 In other words, the mean filter is a simple and effective option against outliers problem. Its implementation is straightforward and requires no memory to save previous values. 
 A pseudocode is as follows:
-
-&nbsp;
-
-```c
-estAngle = 0;
-for( i=0; i<samples; i++)
-    estAngle += new_value;       
-estAngle /= samples; 
-``` 
-
-&nbsp;
 
 
 **Rover rotations**   
 Rover is a  ground vehicle which means that it only steers in one axis. 
 Thus, only rotations in the Y-Axis are possible. 
-As shown in figure \ref{img:roverrotations}, rotations in the X-axis are not possible since the rover cannot fly or go underground.  The same applies to rotations in the Z-axis.
+As shown in figure \ref{img:roverrotations}, rotations in the X-axis are not possible since the Rover moves on the ground.  The same applies to rotations in the Z-axis.
 In other words, the only relevant information from the estimated Euler angles is $\rho$, or the angle related to the Y-axis.
 
 ![Rotation rotations (a) Rotation in X-axis (b) Rotation in Y-axis  \label{img:roverrotations}](img/roverrotation.jpg)
@@ -471,7 +447,7 @@ stop();
 
 
 **Camera Projection and rover driving**  
-As mentioned at the beginning of this chapter, in the pin hole camera model the 2D point $\mathbf{\hat{m}}$ and the 3D $\mathbf{\hat{M}}$ are related through a projection matrix $\mathbf{P}$, and the camera projection matrix $\mathbf{P}$ is formed by the combination of extrinsic and intrinsic camera parameters. 
+As mentioned at the beginning of this chapter, in the pin hole camera model the 2D point $\mathbf{\hat{m}}$ and the 3D $\mathbf{\hat{M}}$ are related through a projection matrix $\mathbf{P}$ [@Zhang2000], and the camera projection matrix $\mathbf{P}$ is formed by the combination of extrinsic and intrinsic camera parameters. 
 In order to move the Follower to the Leader's  position, we must find $\mathbf{\hat{M}}$ given $\mathbf{\hat{m}}$.
 
 
@@ -555,7 +531,7 @@ The rover-API can only give accurate information for distances below  40 cm [@ro
 However, when the Follower approaches the Leader, it will  eventually  be in the measurable range. 
 
 Once the Follower reaches the Leader, it stops and waits until the Leader moves again.
-A pseudocode of the loop is as follows:
+A basic code  of the loop is as follows:
 
 &nbsp;
 
