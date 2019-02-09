@@ -10,11 +10,14 @@ Camera vision field
 -------------------
 The PiCamera mounted on the Rover has a limited vision field. 
 As observed in figure \ref{img:circularshape},  the PiCamera can only sense from $-33$ degrees up to $28$ degrees for a radius of 50cm, in other words the vision field  has a $-33$  degree limit on the left side and a $28$ degree limit on the right side. 
-We could consider the vision field as a trapezoid as in figure \ref{img:visionfield}.  
+We could consider the vision field as a trapezoid as in Figure \ref{img:visionfield}.  
 Thus, the closer the marker to the camera the smaller the vision field due to pinhole model and image projections. 
 In addition, the limits are not the same because the PiCamera is not perfectly aligned with Rover axis. 
 
+
 ![Limits of camera vision field \label{img:circularshape}](img/circularshape.jpg)
+
+![Camera vision field \label{img:visionfield}](img/visionfield.jpg)
 
 
 Maximum detectable rotations
