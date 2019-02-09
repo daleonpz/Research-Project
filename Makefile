@@ -29,7 +29,6 @@ ARGS = \
 
 LATEX_ARGS = \
 	$(ARGS) \
-	--include-after-body=$(APPENDIX_FILE).tex \
 	--template=template.latex \
 	--variable=documentclass:report \
 	--variable=fontsize:11pt \

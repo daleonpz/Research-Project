@@ -43,7 +43,7 @@ We are using an ultrasonic sensor to measure the distance to the marker, however
 Due to the previous explained reasons and the fact that the estimated distance to the marker is known, the use of a sensor to measure distance travelled is needed, and also it will broad the range of possible applications.  
 
 
-In addition, sometimes the Follower is not able to detect the marker anymore since it is very close to it due to the fact that our system does not measure accurately the distance travelled. An example is shown in  \ref{img:results}. 
+In addition, sometimes the Follower is not able to detect the marker anymore since it is very close to it due to the fact that our system does not measure accurately the distance travelled. An example is shown in Figure  \ref{img:results}. 
 It is observed that at the final position $d=3cm$, the Follower lost track of the marker. 
 
 

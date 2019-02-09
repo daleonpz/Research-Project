@@ -1,20 +1,20 @@
 Introduction
 =========
-Today automotive software-intensive systems are developed in silos by each car manufacturer or original equipment manufacturer (OEM) in-house [@Apsstacle2016] and this approach is not suitable for long-term challenges in the industry.
+Today, automotive software-intensive systems are developed in silos by each car manufacturer or original equipment manufacturer (OEM) in-house [@Apsstacle2016] and this approach is not suitable for long-term challenges in the industry.
 For example, big data simulations and virtual modeling can lower development costs and speed up time to market, embedded data sensors should enable more precise monitoring of the performance of vehicles and components [@mckinseyRoadmap], and the car should be connected to monitor working parts and safety conditions around it, and communicate with other vehicles and with an increasingly intelligent roadway infrastructure [@mckinseyConnectedcar]. 
 
 
 
 APPSTACLE
 ------------
-APPSTACLE or _open standard APplication Platform for carS and TrAnsportation vehiCLEs_ is an international ITEA research  project that aims at providing standardized platform for car-to-cloud connectivity, external cloud or in-vehicle applications and the use of open source software without compromising safety and security [@Apsstacle2016]. 
-This document describes an in-vehicle application based on the open source software developed throughout the project. 
+APPSTACLE or _open standard APplication Platform for carS and TrAnsportation vehiCLEs_ is an international ITEA research  project that aims at providing standardized platforms for car-to-cloud connectivity, external cloud or in-vehicle applications and the use of open source software without compromising safety and security [@Apsstacle2016]. 
+This document describes an in-vehicle application based on the open source software (Eclipse Kuksa) developed throughout the project. 
 
 
 Eclipse Kuksa
 -------------
 The result of APPSTACLE project is _Eclipse Kuksa_ and it provides an example tooling stack for the connected vehicle domain [@EKuksa].
-The Eclipse Kuksa ecosystem consists of an in-vehicle platform, a cloud platform, and  an app development IDE as shown in figure \ref{img:ekuksa}.
+The Eclipse Kuksa ecosystem consists of an in-vehicle platform, a cloud platform, and  an app development IDE as shown in Figure \ref{img:ekuksa}.
 
 ![Eclipse Kuksa Ecosystem [@EKuksa] \label{img:ekuksa}](img/EKuksa.png)
 
@@ -27,13 +27,13 @@ The development of Eclipse Kuksa plug-ins or  applications can be done using the
 In order words, a complete toolchain is available as extensions to _Eclipse Che_ which allows not only a fast, but also an independent platform development. 
 
 
-In addition, the cloud platform is built on top of other Eclipse frameworks such as Eclipse Hono, which is  used in telemetry applications; and Eclipse Ditto, which is used to create a digital rover twin. It also provides the Kuksa app-store, so users could download an app and deploy it directly in their rovers.
+In addition, the cloud platform is built on top of other Eclipse frameworks such as Eclipse Hono, which is  used in telemetry applications; and Eclipse Ditto, which is used to create a digital instance of the in-vehicle platform. It also provides the Kuksa app-store, so users can download an App and deploy it directly in their rovers.
 
 In-vehicle Platform (Rover)
 ----------------------------
-The  in-vehicle platform or Rover is based on a raspberry pi 3 that can run _Raspbian Jessie_ or _AGL_ as Operating system.
-The available hardware is shown in figure \ref{img:rovercomponents}. 
-There are two layers besides the raspberry pi. 
+The  in-vehicle platform prototype or  Rover is based on a raspberry pi 3 that can run _Raspbian Jessie_ or _AGL_ as Operating system.
+The available hardware is shown in Figure \ref{img:rovercomponents}. 
+There are two hardware layers besides the raspberry pi. 
 The _Motor driver_ layer based on a MC33926 Motor Driver, and the _Sense_ layer, a custom made circuit board that is designed as a shield on top of MC33926 [@App4mc2017]. 
 The Sense layer provides interfaces for sensors (accelerometers, magnetometer, infrared, ultrasonic, humidity and temperature), buttons, buzzer and OLED display. 
  
@@ -70,6 +70,7 @@ types:
   description: "Service test"
 ```
 
+In this file is described the version of the new service (v1), rover services with which it interacts (driving and infrared) and its methods (`print_hello_world`).
 
 Rover Application
 -------------------
@@ -81,8 +82,8 @@ In addition, the development of our application was done locally because `OpenCV
 
 
 Finally, let us explain the organization of this research project. In chapter 2, we present the design and implementation of our rover-app with some theoretical background. 
-In chapter 3, experimental results. 
-In chapter 4, we describe challenges and issues that should be addressed in further versions.
+In chapter 3, we show the experimental results. 
+In chapter 4, we describe challenges and issues.
 At the end of the document, we summarize the conclusions.
 
 

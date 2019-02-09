@@ -7,9 +7,11 @@ Design and Implementation {#implementation}
 ===========================================
 
 In this research project we develop an example of a  rover-app. 
-For the use case of our application  we are using two _Rovers_, a **Rover Leader**, and a **Rover Follower** running our rover-app. 
+For the use case of our application  we are using two _Rovers roles_, a **Rover Leader**, and a **Rover Follower** running our rover-app. 
 Hereinafter, we will only use **Leader** or **Follower** to refer to them. 
-The Leader has a visual marker, the Follower should detect it, estimate the angle $\beta$ and distance $d$ with respect to the Leader as is shown in figure \ref{img:roverusecase}, and follow the Leader without any human intervention.  
+The Leader has a visual marker, the Follower should detect it, estimate the angle $\beta$ and distance $d$ with respect to the Leader as is shown in Figure \ref{img:roverusecase}, and follow the Leader without any human intervention.  
+
+
 ![Rover Use Case \label{img:roverusecase}](img/roverusecase.jpg)
 
 
@@ -20,30 +22,22 @@ The  following sections will describe the main requirements, camera calibration,
 
 Requirements
 -------------------
-The main requirements for the rover Follower are listed in table 2.1. 
+The main requirements for the rover Follower are listed in Table 2.1. 
 
 
 --------------------------------------------------------------------
 Requirement         Description  
 --------------      ----------------------------------------------------
-Detect visual       The Follower should detect an Aruco Marker  using
-marker              the PiCamera mounted on it. The camera field of 
-                    vision should contain the marker, and the marker
-                    should be at a maximum distance of 100cm from the
-                    PiCamera.   
+Detect visual       The Follower should detect the predefined  
+                    visual marker, created by the ArUco library [@opencv_library],  
+                    using the PiCamera mounted on it.
 
 Estimation          The Follower should estimate the angle and distance 
 angle and           to the marker every time the Leader moves to another 
 distance            position. 
 
 Follower            The Follower should steer based on the estimated 
-driving             values. It should first rotate based on the estimated
-                    angle, and then drive forward based on the estimated
-                    distance, but it should stop when it is within 5cm of
-                    radius from the Leader. 
-
-Leader              The Leader should only move to a new position when
-movement            the Follower reaches it. 
+driving             angle and distance.
 
 Autonomous          The Follower should be completely autonomous. 
 driving             Detection of the marker and driving should be done
@@ -86,20 +80,20 @@ Table: Most importante requirements
 Camera calibration and the pinhole model
 -------------------------------------------
 Camera calibration is a necessary step in 3D computer vision in order to extract metric information from 2D images [@Zhang2004]. 
-If you hold that box in front of you in a dimly lit room, with the pinhole facing some light source  you see an inverted image appearing on the translucent plat [@Forsyth2002]. 
-In figure \ref{img:pinholemodel}, a 3D object (pyramid) is projected first on a scene plane, and then on the image plane. 
+The calibration process is based on the pinhole camera model shown in Figure \ref{img:pinholemodel}.
+A 3D object (pyramid) is projected first on a scene plane, and then on the image plane. 
 Each point in the scene plane or _world frame_  has its correspondence in the image plane or _camera frame_. 
 The distance from the pinhole to the image plane is called focal length.  
 
 
 ![The pinhole imaging model [@Garcia2001]. \label{img:pinholemodel}](img/pinholemodel-complete.png)
 
-The mathematical model of a pinhole camera can be derived using linear algebra and the visual representation  shown in figure \ref{img:pinholemodel}. 
+The mathematical model of a pinhole camera can be derived using linear algebra and the visual representation  shown in Figure \ref{img:pinholemodel}. 
 <!--
  (I may add in the appendix the derivation of the equations)
 --> 
 
-Let's denote a 2D point $\mathbf{\hat{m}} = [x,y,1]^{T}$,  a 3D point $\mathbf{\hat{M}} = [X,Y,Z,1]^{T}$, there exists a camera projection matrix $\mathbf{P}$ such that $\mathbf{\hat{m}} = \mathbf{P}\mathbf{\hat{M}}$. 
+Let's denote a 2D point $\mathbf{\hat{m}} = [x,y,1]^{T}$,  a 3D point $\mathbf{\hat{M}} = [X,Y,Z,1]^{T}$, there exists a camera projection matrix $\mathbf{P}$ such that $\mathbf{\hat{m}} = \mathbf{P}\mathbf{\hat{M}}$.  The camera projection matrix can be decomponsed in two matrices $\mathbf{A}$ and $\lbrack \mathbf{R} \quad \mathbf{t} \rbrack$. 
 
 \begin{equation}
 \mathbf{\hat{m}} = \mathbf{P}\mathbf{\hat{M}} = \mathbf{A}\lbrack \mathbf{R} \quad \mathbf{t} \rbrack \mathbf{\hat{M}}
@@ -119,13 +113,13 @@ The coordinates of the principal point is described by  $(x_0, y_0)$, $\alpha_{x
 \end{equation}
 
 
-The camera extrinsic parameters are given by the rotation matrix $\mathbf{R}$ and translation vector $\mathbf{t}$ which are used to project an image on the world frame to camera frame.
+The camera extrinsic matrix are given by the rotation matrix $\mathbf{R}$ and translation vector $\mathbf{t}$ which are used to project an image on the world frame to camera frame.
 Moreover, the scale transformation is given by $\alpha_{x}$ and $\alpha_{y}$.
 
 
 The camera calibration is performed using `OpenCV`. 
-This library implementation is based on the technique described by [@Zhang2000] and the matlab implementation done by [@Bouguet2010]. 
-The calibration technique in [@Zhang2000] requires the camera to observe a planar pattern, usually a chessboard pattern, at different orientations. The more samples, the better the estimation of the intrinsic parameters. 
+This library implementation is based on the technique described by [@Zhang2000] and the matlaparameters parameters b implementation done by [@Bouguet2010]. 
+parameters The calibration technique in [@Zhang2000] requires the camera to observe a planar pattern, usually a chessboard pattern, at different orientations. The more samples, the better the estimation of the intrinsic parameters. 
 The calibration algorithm minimizes the reprojection error, which is the distance between observed feature points on the planer pattern and the projected using the estimated parameters. 
  
 For calibration, we used a _ChArUco_ board instead of the classical chessboard because it generates a better estimation of the parameters [@opencv_library]. 
