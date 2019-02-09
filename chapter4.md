@@ -2,18 +2,8 @@ Challenges and issues
 ============================
 
 In this chapter we will describe open challenges and unresolved issues that should be addresed or taken into account in further versions of the described rover-app.
-We describe the following issues and challenges: extrinsic parameters estimation, limited camera vision field,  marker maximum detectable rotation, error measurements in the current distance sensing system, and migration from Raspbian to AGL. 
+We describe the following issues and challenges: extrinsic parameters estimation, limited camera vision field,  marker maximum detectable rotation, error measurements in the current distance sensing system, and the migration from Raspbian to AGL. 
 
-
-Estimation of extrinsic parameters
--------------------
-We should always remember the pinhole model. 
-The _world frame_ or plane is projected onto the _image frame_ or plane. 
-Figure \ref{img:visionfield} presents a marker in three diferrent positions. 
-Rotation and translation vectors  are the same for each position, because from the perspective of the camera they belong to the same world plane, thus rotation and translation vectors in all the cases are the same. 
-
-
-![Camera vision field \label{img:visionfield}](img/visionfield.jpg)
 
 
 Camera vision field
