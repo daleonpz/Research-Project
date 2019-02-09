@@ -3,13 +3,13 @@ Experimental Results
 
 In this chapter, we evaluate the behavior of the Follower in an controlled environment. 
 We present the results of two test cases: known distance and angle and difference between ultrasonic sensor and camera.
-Our experiments consisted in three steps: set a known initial and final position, turn on the Follower rover, and measure the deviation from expected final position 
-We measured the deviation using the front ultrasonic sensor, the PiCamera and a ruler with smallest division of the scale of 1 mm, or estimated uncertainty of 0.5 mm. 
+Our experiments consisted in setting a known initial and final position, and measure the deviation from expected final position.
+We measure the deviation using the front ultrasonic sensor, the PiCamera and a ruler with smallest division of the scale of 1 mm, or estimated uncertainty of 0.5 mm. 
 
 Known distance and angle
 ----------------------------
 In this test case we evaluated the Follower's accuracy to reach the desired position and orientation.
-The different setting and initial camera estimations are presented on table 3.1.
+The different setting and initial camera estimations are presented in Table 3.1.
 Distance values are in centimeters (cm) and angle values are in degrees.
 For the initial position, the results show that absolute error  for both distance and angle is  less than 4cm and $3^\circ$ respectively, and that relative error is less than 5% for distance and less than 9% for angle if we ignore the relative error for $0^\circ$.
 
@@ -27,7 +27,7 @@ Relative Error      8.1%            8.43%           1.38%           1.69%       
 
 Table: Initial settings and estimations 
 
-In table 3.2 the results for the final position are presented.
+In Table 3.2 presents the results for the final position.
 The absolute error for distance is less than 0.7cm, and  less than $2.75^\circ$ for angle. 
 On the other hand, the relative error for distance and angle is, in the worst case, 14.17% and 257.89% respectively. 
 
@@ -55,7 +55,7 @@ Ultrasonic sensor are commonly used to measure the distance to an object.
 We wanted to compare the accuracy of the ultrasonic ranging module HC-SC04  with PiCamera.
 In table 3.3 are presented the results of our experiments.
 The results show the chosen ultrasonic sensor is useless for distances larger than 40cm, while camera estimations have absolute errors lower than 1.52 cm. 
-In [@roverAPI] is mentioned that for distances greater than 40cm, the sensor readings are not reliable.
+In [@roverAPI] it is mentioned that for distances greater than 40cm, the sensor readings are not reliable.
 On the other hand, for distances smaller than 40cm, both ultrasonic readings and camera estimations presented absolute errors lower than 0.72cm and 1cm respectively.
 
                     1       2           3           4       5       6 
