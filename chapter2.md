@@ -28,44 +28,44 @@ The main requirements for the rover Follower are listed in Table 2.1.
 --------------------------------------------------------------------
 Requirement         Description  
 --------------      ----------------------------------------------------
-Detect visual       The Follower should detect the predefined  
-                    visual marker, created by the ArUco library [@opencv_library],  
+01.Detect visual       The Follower should detect the predefined  
+marker              visual marker, created by the ArUco library [@opencv_library],  
                     using the PiCamera mounted on it.
 
-Estimation          The Follower should estimate the angle and distance 
+02.Estimation          The Follower should estimate the angle and distance 
 angle and           to the marker every time the Leader moves to another 
 distance            position. 
 
-Follower            The Follower should steer based on the estimated 
+03.Follower            The Follower should steer based on the estimated 
 driving             angle and distance.
 
-Autonomous          The Follower should be completely autonomous. 
+04.Autonomous          The Follower should be completely autonomous. 
 driving             Detection of the marker and driving should be done
                     with no human intervention other than turning the
                     rover on and initial positioning.  
 
-Operating           The Follower should run Raspbian Jessie  as 
+05.Operating           The Follower should run Raspbian Jessie  as 
 system              operation system. 
 
-OpenCV              The Follower should use OpenCV 3.4.1 [@opencv_library] for the video
+06.OpenCV              The Follower should use OpenCV 3.4.1 [@opencv_library] for the video
 library             processing including reading video frames, marker
                     detection, and estimation of the angle and distance
                     to the marker. 
 
-Rover-App           The Follower's code should be based on the services such
+07.Rover-App           The Follower's code should be based on the services such
 library             as sensor reading and driving provided by the 
                     rover-app library. 
 
-Maintainability      The Follower's code should be maintainable following 
+08.Maintainability      The Follower's code should be maintainable following 
                     principles of modularity and encapsulation, and 
                     avoiding code duplication code. 
 
-Reusable            The Follower's code should be reusable. Subroutines
+09.Reusable            The Follower's code should be reusable. Subroutines
                     or functions should be well defined, and its 
                     design should take into account orthogonality 
                     and extensibility. 
 
-Understandability   The Follower's code should be understandable. Comments
+10.Understandability   The Follower's code should be understandable. Comments
                     should be relevant, variable and function names
                     should be self explanatory, the code sections should
                     be well defined (includes, global/static/volatile
@@ -253,7 +253,7 @@ Following the sequence of rotations presented above and the algorithm described 
 
 Implementation details
 -------------------------------
-As it was mentioned before, the Follower should be completely autonomous. 
+According to Requirement 04, the Follower should be completely autonomous. 
 In order to do so, the Follower captures video frames, processes the frames with `OpenCV` a and generate movement based on the processed data. 
 
 
@@ -261,7 +261,7 @@ In order to do so, the Follower captures video frames, processes the frames with
 
 
 **Video Processing with OpenCV**  
-We use `OpenCV` and the submodule `aruco`  to capture video and process the frames in order to extract information from the visual markers.
+We use `OpenCV` and the submodule `aruco`  to capture video and process the frames in order to extract information from the visual markers (Requirement 01, 02).
 To estimate and detect the marker at the beginning  we should load the camera intrinsic parameters, saved in a YAML file,  and the Aruco dictionary, composed by 250 markers and a marker size of 6x6 bits [@opencv_library],  to memory.
 These steps are shown in following code. 
 
@@ -287,30 +287,7 @@ The next step is to estimate the extrinsic camera parameters, which means the ro
 The size of the marker is an input parameter of the `OpenCV` function `cv::aruco::estimatePoseSingleMarkers`. 
 Finally, we calculate the Euler angles by using function `cv::Rodrigues`  and  Slabaugh's algorithm, described in the previous section. 
 The `cv:Rodrigues` function is a direct implementation of equations 2.4 and 2.5. 
-The code below shows how to used the mentioned functions.
-
-
-&nbsp;
-
-
-```c
-// image: input frame 
-// corners: detected corners
-// rvec: rotation vector
-// tvec: translation vector
-// rmat: rotation matrix
-// angle: Euler angles
-cv::aruco::detectMarkers(image, dictionary, corners, ids);
-cv::aruco::estimatePoseSingleMarkers( corners, 0.07, 
-                                cameraMatrix, 0, rvec, tvec);
-cv::Rodrigues(rvec, rmat);
-rotationMatrixToEulerAngles(rmat, angle)
-```
-
-
-&nbsp;
-
-A basic code for extracting the features from the marker  is as follows:
+Thus, a basic code for extracting the features from the marker  is as follows:
 
 &nbsp;
 
@@ -343,8 +320,8 @@ rotationMatrixToEulerAngles(rmat, angles);
 
 
 
-An example is  shown in figure  \ref{img:cameraaxis}. The Euler angles are $\psi = 165$, $\rho = 25$ and $\psi = 0$. The green, red and blue axes correspond to the X-axis, Y-axis and Z-axis respectively.
-As expected from the pin hole model, $\psi$ is near 180 because the image is facing the camera as result the blue axis points towards the camera.
+An example is  shown in Figure  \ref{img:cameraaxis}. The Euler angles are $\psi = 165$, $\rho = 25$ and $\psi = 0$. The green, red and blue axes correspond to the X-axis, Y-axis and Z-axis respectively.
+As expected from the pin hole model in Section 2.2, $\psi$ is near 180 because the image is facing the camera as result the blue axis points towards the camera.
 
 ![Camera axis \label{img:cameraaxis}](img/camera_axis.png)
 
@@ -372,7 +349,7 @@ Table: Statistics of estimated Euler angles and distance to visual marker
 
 
 The results of the standard deviation $\sigma$  from table 2.2 suggest the estimated values can be stable ($\sigma < 0.16$ deg) overall, particularly in the case of distance to the marker ($\sigma < 0.04cm$).
-However, figure \ref{img:axisplot} suggests the existence of peak values, thus we must filter the samples in order to minimize the effect of those outliers.   
+However, Figure \ref{img:axisplot} suggests the existence of peak values, thus we must filter the samples in order to minimize the effect of those outliers.   
 A median filter is highly effective removing outliers from data, but requires to save chunks of data in memory. However, the results showed that the mean and the median of Euler angles are similar, thus it is reasonable to think that outliers have small influence on the data.
 In other words, the mean filter is a simple and effective option against outliers problem. Its implementation is straightforward and requires no memory to save previous values. 
 A pseudocode is as follows:
@@ -381,7 +358,7 @@ A pseudocode is as follows:
 **Rover rotations**   
 Rover is a  ground vehicle which means that it only steers in one axis. 
 Thus, only rotations in the Y-Axis are possible. 
-As shown in figure \ref{img:roverrotations}, rotations in the X-axis are not possible since the Rover moves on the ground.  The same applies to rotations in the Z-axis.
+As shown in Figure \ref{img:roverrotations}, rotations in the X-axis are not possible since the Rover moves on the ground.  The same applies to rotations in the Z-axis.
 In other words, the only relevant information from the estimated Euler angles is $\rho$, or the angle related to the Y-axis.
 
 ![Rotation rotations (a) Rotation in X-axis (b) Rotation in Y-axis  \label{img:roverrotations}](img/roverrotation.jpg)
@@ -447,8 +424,8 @@ stop();
 
 
 **Camera Projection and rover driving**  
-As mentioned at the beginning of this chapter, in the pin hole camera model the 2D point $\mathbf{\hat{m}}$ and the 3D $\mathbf{\hat{M}}$ are related through a projection matrix $\mathbf{P}$ [@Zhang2000], and the camera projection matrix $\mathbf{P}$ is formed by the combination of extrinsic and intrinsic camera parameters. 
-In order to move the Follower to the Leader's  position, we must find $\mathbf{\hat{M}}$ given $\mathbf{\hat{m}}$.
+As mentioned at the beginning of this chapter, in the pin hole camera model, described in Section 2.2, the 2D point $\mathbf{\hat{m}}$ and the 3D $\mathbf{\hat{M}}$ are related through a projection matrix $\mathbf{P}$ [@Zhang2000], and the camera projection matrix $\mathbf{P}$ is formed by the combination of extrinsic and intrinsic camera parameters. 
+In order to move the Follower to the Leader's  position, we must find $\mathbf{\hat{M}}$ given $\mathbf{\hat{m}}$ (Requirement 03).
 
 
 \begin{equation}
@@ -501,7 +478,7 @@ R_{y}(\rho )^{T} =  R_{y}(-\rho)
 
 
 **Implementation**  
-The activity diagram of use case is shown in figure  \ref{img:activitydiagram}.
+The activity diagram of use case is shown in Figure  \ref{img:activitydiagram}.
 First, the rover API is initialized, it also includes the motor and sensors, and the camera intrinsic parameters are load into memory as described before. 
 
 &nbsp;

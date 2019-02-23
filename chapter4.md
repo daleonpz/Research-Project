@@ -9,7 +9,7 @@ We describe the following issues and challenges: extrinsic parameters estimation
 Camera vision field
 -------------------
 The PiCamera mounted on the Rover has a limited vision field. 
-As observed in figure \ref{img:circularshape},  the PiCamera can only sense from $-33$ degrees up to $28$ degrees for a radius of 50cm, in other words the vision field  has a $-33$  degree limit on the left side and a $28$ degree limit on the right side. 
+As observed in Figure \ref{img:circularshape},  the PiCamera can only sense from $-33$ degrees up to $28$ degrees for a radius of 50cm, in other words the vision field  has a $-33$  degree limit on the left side and a $28$ degree limit on the right side. 
 We could consider the vision field as a trapezoid as in Figure \ref{img:visionfield}.  
 Thus, the closer the marker to the camera the smaller the vision field due to pinhole model and image projections. 
 In addition, the limits are not the same because the PiCamera is not perfectly aligned with Rover axis. 
@@ -23,7 +23,7 @@ In addition, the limits are not the same because the PiCamera is not perfectly a
 Maximum detectable rotations
 ------------------
 There is a maximun $\rho$ angle in clockwise and counterclockwise directions that can be detected.
-In figure \ref{img:maximumrrotations} the position and angle in which the marker can still be detectable is shown. 
+In Figure \ref{img:maximumrrotations} the position and angle in which the marker can still be detectable is shown. 
 For counterclockwise rotations the maximum $\rho$ angle is $-77$ degrees and for clockwise rotations is $72$ degrees. 
 
 
@@ -38,6 +38,7 @@ Due to the previous explained reasons and the fact that the estimated distance t
 
 In addition, sometimes the Follower is not able to detect the marker anymore since it is very close to it due to the fact that our system does not measure accurately the distance travelled. An example is shown in Figure  \ref{img:results}. 
 It is observed that at the final position $d=3cm$, the Follower lost track of the marker. 
+From the experiments, the Follower detected the marker from distances larger than 20cm.  
 
 
 ![(a) Initial position $d=22.73cm$, $\rho=-33.41^\circ$ (b) Final Position \label{img:results}](img/results.jpg)
@@ -45,7 +46,7 @@ It is observed that at the final position $d=3cm$, the Follower lost track of th
 
 Switching to Raspbian to AGL
 --------------
-The rover-app described in this document runs on top of the Raspbian operation system.
+The rover-app described in this document runs on top of the Raspbian operation system (Requirement 05).
 In further improvements the application should run on AGL. 
 However, the current version of the Eclipse Kuksa software development kit (SDK) is not compatible with `OpenCV 3.4.1`, thus this issue should be addressed first. 
 

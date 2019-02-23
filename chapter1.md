@@ -1,7 +1,7 @@
 Introduction
 =========
-Today, automotive software-intensive systems are developed in silos by each car manufacturer or original equipment manufacturer (OEM) in-house [@Apsstacle2016] and this approach is not suitable for long-term challenges in the industry.
-For example, big data simulations and virtual modeling can lower development costs and speed up time to market, embedded data sensors should enable more precise monitoring of the performance of vehicles and components [@mckinseyRoadmap], and the car should be connected to monitor working parts and safety conditions around it, and communicate with other vehicles and with an increasingly intelligent roadway infrastructure [@mckinseyConnectedcar]. 
+Today, automotive software-intensive systems are developed in silos by each  original equipment manufacturer (OEM) in-house [@Apsstacle2016] and this approach is not suitable for long-term challenges in the industry.
+For example, big data simulations and computer-aid modeling can lower development costs and speed up time to market, embedded data sensors should enable more precise monitoring of the performance of vehicles and components [@mckinseyRoadmap], and the car should be connected to monitor working parts and safety conditions around it, and communicate with other vehicles and with an increasingly intelligent roadway infrastructure [@mckinseyConnectedcar]. 
 
 
 
@@ -27,7 +27,7 @@ The development of Eclipse Kuksa plug-ins or  applications can be done using the
 In order words, a complete toolchain is available as extensions to _Eclipse Che_ which allows not only a fast, but also an independent platform development. 
 
 
-In addition, the cloud platform is built on top of other Eclipse frameworks such as Eclipse Hono, which is  used in telemetry applications; and Eclipse Ditto, which is used to create a digital instance of the in-vehicle platform. It also provides the Kuksa app-store, so users can download an App and deploy it directly in their rovers.
+In addition, the cloud platform is built on top of other Eclipse frameworks such as Eclipse Hono, which is  used in telemetry applications as backend cloud platform; and Eclipse Ditto, which is used to create a digital instance of the in-vehicle platform. It also provides the Kuksa app-store, so users can download an App and deploy it directly in their rovers.
 
 In-vehicle Platform (Rover)
 ----------------------------
